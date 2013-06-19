@@ -7,6 +7,7 @@
 #define BIT_OP_OR  2
 #define BIT_OP_XOR 3
 #define BIT_OP_SOR 4
+#define BIT_OP_NOT_AND  5  //取反 再做and
 
 #define  bIdxBit_get_val(ps, pos, val)                                  \
     do                                                                  \

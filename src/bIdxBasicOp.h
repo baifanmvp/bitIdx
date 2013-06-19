@@ -159,8 +159,8 @@ bool bIdxBasOp_ext(bIdxBasOp* pbIdxBasOp)
     return TRUE;
 }
 
-
-bIdxArray* bIdxBasOp_search_op(bIdxBasOp* pbIdxBasOp, int op, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
+//array to array
+bIdxArray* bIdxBasOp_searchOr_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
 {
     if(!pbIdxBasOp || !srcArr)
         return NULL;
@@ -172,32 +172,48 @@ bIdxArray* bIdxBasOp_search_op(bIdxBasOp* pbIdxBasOp, int op, bIdxArray* pDestAr
     
     while(idx < BIDXARRAY_BLOCK_CNT)
     {
-        if (op == BIT_OP_OR)
+        if(!pDestArr->array[idx] && pSrcArr->array[idx])
         {
-            if(!pDestArr->array[idx] && pSrcArr->array[idx])
-            {
-                //load a block if OR op
-                bIdxBlock* p_new_block =  (bIdxBlock*)malloc(BIDXBLOCK_SIZE);
-                memcpy(p_new_block, pSrcArr->array[idx], BIDXBLOCK_SIZE);
-                bIdxArray_load_block(pDestArr, p_new_block, idx);
-            }
-            else
-            {
-                bIdxArray_block_op(pDestArr,  pSrcArr, idx,  op);
-            }
+            //load a block if OR op (malloc)
+            bIdxBlock* p_new_block =  (bIdxBlock*)malloc(BIDXBLOCK_SIZE);
+            memcpy(p_new_block, pSrcArr->array[idx], BIDXBLOCK_SIZE);
+            bIdxArray_load_block(pDestArr, p_new_block, idx);
         }
-        else if (op == BIT_OP_AND)
+        else
         {
-            if(pDestArr->array[idx] && !pSrcArr->array[idx])
-            {
-                //unload a block if AND op
-                bIdxBlock* p_unload_block = bIdxArray_unload_block(pDestArr, idx);
-                free(p_unload_block);
-            }
-            else
-            {
-                bIdxArray_block_op(pDestArr,  pSrcArr, idx,  op);
-            }
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_OR);
+        }
+        
+        idx ++;
+        
+    }
+
+    return pDestArr;
+}
+
+
+
+bIdxArray* bIdxBasOp_searchAnd_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp || !srcArr)
+        return NULL;
+
+    if(!pDestArr)
+        return bIdxArray_dup(pSrcArr);
+
+    index_t idx = 0;
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        if(pDestArr->array[idx] && !pSrcArr->array[idx])
+        {
+            //unload a block if AND op (malloc)
+            bIdxBlock* p_unload_block = bIdxArray_unload_block(pDestArr, idx);
+            free(p_unload_block);
+        }
+        else
+        {
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_AND);
         }
         
         
@@ -205,8 +221,214 @@ bIdxArray* bIdxBasOp_search_op(bIdxBasOp* pbIdxBasOp, int op, bIdxArray* pDestAr
         
     }
 
-    
+    return pDestArr;
 }
+
+
+
+
+
+bIdxArray* bIdxBasOp_modify_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp || !srcArr || !pDestArr)
+        return NULL;
+
+
+    char* org = NULL;
+    char* tag = NULL;
+    index_t idx = 0;
+    char* lp_all_key = strdup(pDestArr->allKey);
+    
+    split_all_string(org, tag, lp_all_key);
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        if(!pDestArr->array[idx] && pSrcArr->array[idx])
+        {
+            //load a block if OR op (file mmap)
+            bIdxfreeNode* lp_free_node = pbIdxBasOp->free;
+            pbIdxBasOp->free = pbIdxBasOp->free->next;
+
+            
+            bIdxBlock* p_new_block =  (bIdxBlock*)lp_free_node->node;
+            bIdxBlock_init(org, tag, idx, 0, (byte*)p_new_block);
+            memcpy(p_new_block + 1, pSrcArr->array[idx] + 1, BIDXBLOCK_ID_SIZE);
+            bIdxArray_load_block(pDestArr, p_new_block, idx);
+
+            free(lp_free_node);
+        }
+        else
+        {
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_OR);
+        }
+        
+        idx ++;
+        
+    }
+
+    free(lp_all_key);
+    return pDestArr;
+}
+
+//if pSrcArr is NULL ,then remove all block of pDestArr
+bIdxArray* bIdxBasOp_remove_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp ||  !pDestArr)
+        return NULL;
+
+
+    index_t idx = 0;
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_NOT_AND);
+        
+        idx ++;
+        
+    }
+
+    free(lp_all_key);
+    return pDestArr;
+}
+
+/////////////////////////////////////////////
+
+
+
+//array to idResult
+
+bIdxArray* bIdxBasOp_searchOr_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp || !srcArr)
+        return NULL;
+
+    if(!pDestArr)
+        return bIdxArray_dup(pSrcArr);
+
+    index_t idx = 0;
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        if(!pDestArr->array[idx] && pSrcArr->array[idx])
+        {
+            //load a block if OR op (malloc)
+            bIdxBlock* p_new_block =  (bIdxBlock*)malloc(BIDXBLOCK_SIZE);
+            memcpy(p_new_block, pSrcArr->array[idx], BIDXBLOCK_SIZE);
+            bIdxArray_load_block(pDestArr, p_new_block, idx);
+        }
+        else
+        {
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_OR);
+        }
+        
+        idx ++;
+        
+    }
+
+    return pDestArr;
+}
+
+
+
+bIdxArray* bIdxBasOp_searchAnd_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxBasRes* pBasRes)
+{
+    if(!pbIdxBasOp || !srcArr)
+        return NULL;
+
+    if(!pDestArr)
+        return bIdxArray_dup(pSrcArr);
+
+    index_t idx = 0;
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        if(pDestArr->array[idx] && !pSrcArr->array[idx])
+        {
+            //unload a block if AND op (malloc)
+            bIdxBlock* p_unload_block = bIdxArray_unload_block(pDestArr, idx);
+            free(p_unload_block);
+        }
+        else
+        {
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_AND);
+        }
+        
+        
+        idx ++;
+        
+    }
+
+    return pDestArr;
+}
+
+
+
+
+
+bIdxArray* bIdxBasOp_modify_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp || !srcArr || !pDestArr)
+        return NULL;
+
+
+    char* org = NULL;
+    char* tag = NULL;
+    index_t idx = 0;
+    char* lp_all_key = strdup(pDestArr->allKey);
+    
+    split_all_string(org, tag, lp_all_key);
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        if(!pDestArr->array[idx] && pSrcArr->array[idx])
+        {
+            //load a block if OR op (file mmap)
+            bIdxfreeNode* lp_free_node = pbIdxBasOp->free;
+            pbIdxBasOp->free = pbIdxBasOp->free->next;
+
+            
+            bIdxBlock* p_new_block =  (bIdxBlock*)lp_free_node->node;
+            bIdxBlock_init(org, tag, idx, 0, (byte*)p_new_block);
+            memcpy(p_new_block + 1, pSrcArr->array[idx] + 1, BIDXBLOCK_ID_SIZE);
+            bIdxArray_load_block(pDestArr, p_new_block, idx);
+
+            free(lp_free_node);
+        }
+        else
+        {
+            bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_OR);
+        }
+        
+        idx ++;
+        
+    }
+
+    free(lp_all_key);
+    return pDestArr;
+}
+
+//if pSrcArr is NULL ,then remove all block of pDestArr
+bIdxArray* bIdxBasOp_remove_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxArray* pSrcArr)
+{
+    if(!pbIdxBasOp ||  !pDestArr)
+        return NULL;
+
+
+    index_t idx = 0;
+    
+    while(idx < BIDXARRAY_BLOCK_CNT)
+    {
+        bIdxArray_block_op(pDestArr,  pSrcArr, idx,  BIT_OP_NOT_AND);
+        
+        idx ++;
+        
+    }
+
+    free(lp_all_key);
+    return pDestArr;
+}
+
+
 
 
 #endif

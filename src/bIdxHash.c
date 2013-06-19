@@ -62,7 +62,7 @@ bool bIdxHash_delete(bIdxHash* pIdxHash)
         GList* list_value_iter = g_list_first(list_value);
         do {
             bAllVal* p_all_val = (bAllVal*)list_value_iter->data;
-            free(p_all_val->data);  //free bIdxArray
+            bIdxArray_delete(p_all_val->data);//free bIdxArray
             free(p_all_val);
         } while ((list_value_iter = g_list_next(list_value_iter)) != NULL);
         g_list_free(list_value);
@@ -76,14 +76,14 @@ bool bIdxHash_delete(bIdxHash* pIdxHash)
     return TRUE;
 }
 
-bool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, void* data)
+bool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data)
 {
     
     bPreVal* p_pre_val = bIdxHash_lookup_pre(pIdxHash, prefix);
     bPreVal* p_new_val = (bPreVal*)malloc(sizeof(bPreVal));
     p_new_val->suffix = strdup(suffix);
     p_new_val->data = data;
-    p_new_val->next = p_pre_val;
+-    p_new_val->next = p_pre_val;
          
     if(p_pre_val)
     {
@@ -97,7 +97,8 @@ bool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, void* data)
     bAllVal* p_all_val = (bAllVal*)malloc(sizeof(bAllVal));
     char* lp_all_key = NULL;
     dup_all_string(prefix, suffix, lp_all_key);
-    
+
+    data->allKey = lp_all_key;
     p_all_val->data = data;
     g_hash_table_insert(pIdxHash->allHash, lp_all_key, p_all_val);
     

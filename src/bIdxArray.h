@@ -30,6 +30,14 @@ typedef struct st_bIdxBlock
 
 #define BIDXARRAY_POS_BLOCK(arr, pos) ((arr)->array[(pos)/BIDXBLOCK_ID_CNT]) 
 
+#define bIdxArray_set_bitVal(arr, pos, val)                             \
+    bIdxBit_set_val( ((arr)->array[(pos) / BIDXBLOCK_ID_CNT]) + 1, (pos) % BIDXBLOCK_ID_CNT, val)
+
+
+#define bIdxArray_get_bitVal(arr, pos, val)                             \
+    bIdxBit_get_val( ((arr)->array[(pos) / BIDXBLOCK_ID_CNT]) + 1, (pos) % BIDXBLOCK_ID_CNT, val)
+
+
 #define BIDXARRAY_POS_SET_VAL(arr, pos, val)                        \
     do                                                              \
     {                                                               \
@@ -49,13 +57,14 @@ typedef struct st_bIdxBlock
 
 typedef struct st_bIdxArray
 {
+    char* allkey; //ref allkey of hashtable 
     bIdxBlock* array[BIDXARRAY_BLOCK_CNT];
 }bIdxArray;
 
 
 struct st_bIdxIdRes
 {
-    did_t* id;
+    bid_t* id;
     size_t cnt;
 }bIdxBasRes;
 
@@ -191,6 +200,10 @@ bool bIdxArray_block_op(bIdxArray* pDest, bIdxArray* pSrc, index_t idx, int op)
         return FALSE;
     }
 } 
+
+
+
+
 
 
 bIdxArray* bIdxArray_dup(bIdxArray* pArray)

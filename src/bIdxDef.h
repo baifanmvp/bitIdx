@@ -10,6 +10,7 @@ typedef char flag_t;
 typedef unsigned long long  id_t;
 
 typedef size_t index_t;
+typedef int  bid_t;
 #define TRUE 1
 #define FALSE 0
 #define NULL 0

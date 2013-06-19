@@ -98,6 +98,27 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mod --;
         }
     }
+    else if (op == BIT_OP_NOT_AND)
+    {
+        while(mul)
+        {
+            *ldest &= ~(*lsrc);
+            ldest += 1;
+            lsrc += 1;
+            mul --;
+        }
+
+        cdest = (byte*)ldest;
+        csrc = (byte*)lsrc;
+        
+        while(mod)
+        {
+            *cdest &= ~(*csrc);
+            cdest += 1;
+            csrc += 1;
+            mod --;
+        }
+    }
     return 1;
 }
 
