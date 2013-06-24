@@ -31,9 +31,9 @@ typedef struct
         int n_all_len = n_pre_len + n_suf_len + 2;      \
         all = (char*)malloc(n_all_len);                 \
         memcpy(all, pre, n_pre_len);                    \
-        memcpy(all + n_pre_len, ".", 1);                 \
-        memcpy(all + n_pre_len + 1, suf, n_suf_len);    \
-        all[n_all_len - 1] = '\0';                      \
+        memcpy((all) + n_pre_len, ".", 1);              \
+        memcpy((all) + n_pre_len + 1, suf, n_suf_len);  \
+        (all)[n_all_len - 1] = '\0';                    \
     }while(FALSE)
 
 
@@ -41,19 +41,19 @@ typedef struct
 #define split_all_string(pre, suf, all)                 \
     do                                                  \
     {                                                   \
-        byte* p = strchr(all, '.');                     \
+        bbyte* p = strchr(all, '.');                     \
         pre = all;                                      \
         suf = p + 1;                                    \
-        *p = '\0'                                       \
+        *p = '\0';                                      \
     }while(FALSE)
 
 
 
 bIdxHash* bIdxHash_new();
 
-bool bIdxHash_delete(bIdxHash* pIdxHash);
+bbool bIdxHash_delete(bIdxHash* pIdxHash);
 
-bool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data);
+bbool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data);
 
 bAllVal* bIdxHash_lookup_all(bIdxHash* pIdxHash, char* all);
 

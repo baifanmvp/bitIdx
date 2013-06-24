@@ -67,7 +67,7 @@ bIdxFile* bIdxFile_open(char* path)
     pf->msize = pf->fsize - BIDX_FHEAD_SIZE;
     if(pf->msize)
     {
-        pf->mem = (addr*)mmap(0, pf->fsize,
+        pf->mem = (baddr*)mmap(0, pf->fsize,
                               PROT_READ|PROT_WRITE, MAP_SHARED,
                               pf->fd, 0);
         
@@ -90,7 +90,7 @@ bIdxFile* bIdxFile_open(char* path)
     
 }
 
-bool bIdxFile_append(bIdxFile* bFile, size_t fsize)
+bbool bIdxFile_append(bIdxFile* bFile, size_t fsize)
 {
     if(!bFile || !fsize)
     {
@@ -141,7 +141,7 @@ bool bIdxFile_append(bIdxFile* bFile, size_t fsize)
     bFile->msize = bFile->fsize - BIDX_FHEAD_SIZE;
     if(bFile->msize)
     {
-        bFile->mem = (addr*)mmap(0, bFile->fsize,
+        bFile->mem = (baddr*)mmap(0, bFile->fsize,
                               PROT_READ|PROT_WRITE, MAP_SHARED,
                               bFile->fd, 0);
         
@@ -173,7 +173,7 @@ size_t bIdxFile_get_size(bIdxFile* bFile)
     
 }
 
-addr* bIdxFile_get_map_addr(bIdxFile* bFile)
+baddr* bIdxFile_get_map_addr(bIdxFile* bFile)
 {
     if(bFile && bFile->mem)
         return bFile->mem + BIDX_FHEAD_SIZE;
@@ -190,7 +190,7 @@ bIdxFileHead* bIdxFile_get_head(bIdxFile* bFile)
 }
 
 
-bool bIdxFile_close(bIdxFile* bFile)
+bbool bIdxFile_close(bIdxFile* bFile)
 {
     if(!bFile)
     {

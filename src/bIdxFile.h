@@ -31,7 +31,7 @@ typedef struct
     int fd;
     size_t fsize;
     
-    addr* mem;
+    baddr* mem;
     size_t msize;
     bIdxFileHead* head;
     
@@ -43,17 +43,17 @@ typedef struct
 
 bIdxFile* bIdxFile_open(char* path);
 
-bool bIdxFile_append(bIdxFile* bFile, size_t fsize);
+bbool bIdxFile_append(bIdxFile* bFile, size_t fsize);
 
 int bIdxFile_get_fd(bIdxFile* bFile);
 
 size_t bIdxFile_get_size(bIdxFile* bFile);
 
-addr* bIdxFile_get_map_addr(bIdxFile* bFile);
+baddr* bIdxFile_get_map_addr(bIdxFile* bFile);
 
 bIdxFileHead* bIdxFile_get_head(bIdxFile* bFile);
 
-bool bIdxFile_close(bIdxFile* bFile);
+bbool bIdxFile_close(bIdxFile* bFile);
 
 
 

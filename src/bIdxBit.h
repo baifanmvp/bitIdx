@@ -14,7 +14,7 @@
     {                                                                   \
         size_t mod = ((size_t)(BYTE_VAL_8 - 1) & (pos));  /* pos % 8 */ \
         size_t mul = (pos) >> 3; /* pos / 8 */                          \
-        byte base = 1;                                                  \
+        bbyte base = 1;                                                  \
                                                                         \
         base <<= mod;                                                   \
                                                                         \
@@ -27,7 +27,7 @@
         size_t mod = ((size_t)(BYTE_VAL_8 - 1) & pos);  /* pos % 8 */   \
         size_t mul = pos >> 3; /* pos / 8 */                            \
                                                                         \
-        byte base = 1;                                                  \
+        bbyte base = 1;                                                  \
         base <<= mod;                                                   \
         if(val)                                                         \
         {                                                               \

@@ -10,7 +10,7 @@ bIdxHash* bIdxHash_new()
     return p_idx_hash;
 }
 
-bool bIdxHash_delete(bIdxHash* pIdxHash)
+bbool bIdxHash_delete(bIdxHash* pIdxHash)
 {
     if(!pIdxHash)
     {
@@ -76,14 +76,14 @@ bool bIdxHash_delete(bIdxHash* pIdxHash)
     return TRUE;
 }
 
-bool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data)
+bbool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data)
 {
     
     bPreVal* p_pre_val = bIdxHash_lookup_pre(pIdxHash, prefix);
     bPreVal* p_new_val = (bPreVal*)malloc(sizeof(bPreVal));
     p_new_val->suffix = strdup(suffix);
     p_new_val->data = data;
--    p_new_val->next = p_pre_val;
+    p_new_val->next = p_pre_val;
          
     if(p_pre_val)
     {

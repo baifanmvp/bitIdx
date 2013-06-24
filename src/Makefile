@@ -74,7 +74,8 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libbitidx_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libbitidx_la_OBJECTS = libbitidx_la-bIdxBit.lo \
-	libbitidx_la-bIdxFile.lo libbitidx_la-bIdxHash.lo
+	libbitidx_la-bIdxFile.lo libbitidx_la-bIdxArray.lo \
+	libbitidx_la-bIdxHash.lo libbitidx_la-bIdxBasicOp.lo
 libbitidx_la_OBJECTS = $(am_libbitidx_la_OBJECTS)
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -95,12 +96,12 @@ HEADERS = $(nobase_include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run tar
+ACLOCAL = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -132,7 +133,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -155,10 +156,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = VERSION
-abs_builddir = /home/bf/bf_tmp/tmp/bitIdx/src
-abs_srcdir = /home/bf/bf_tmp/tmp/bitIdx/src
-abs_top_builddir = /home/bf/bf_tmp/tmp/bitIdx
-abs_top_srcdir = /home/bf/bf_tmp/tmp/bitIdx
+abs_builddir = /home/bf/bf_tmp/bitIdx/src
+abs_srcdir = /home/bf/bf_tmp/bitIdx/src
+abs_top_builddir = /home/bf/bf_tmp/bitIdx
+abs_top_srcdir = /home/bf/bf_tmp/bitIdx
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
 am__include = include
@@ -189,7 +190,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include/${bitidx_version}/
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/bf/bf_tmp/tmp/bitIdx/install-sh
+install_sh = ${SHELL} /home/bf/bf_tmp/bitIdx/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -214,12 +215,17 @@ AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libbitidx.la
 libbitidx_la_SOURCES = bIdxBit.c\
                        bIdxFile.c\
-                       bIdxHash.c
+                       bIdxArray.c\
+                       bIdxHash.c\
+                       bIdxBasicOp.c
 
 libbitidx_la_LIBADD = $(glib_LIBS)
 libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared
 nobase_include_HEADERS = bIdxBit.h\
-                         bIdxFile.h
+                         bIdxFile.h\
+                         bIdxArray.h\
+                         bIdxHash.h\
+                         bIdxBasicOp.h
 
 all: all-am
 
@@ -295,6 +301,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/libbitidx_la-bIdxArray.Plo
+include ./$(DEPDIR)/libbitidx_la-bIdxBasicOp.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxBit.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxFile.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxHash.Plo
@@ -334,12 +342,26 @@ libbitidx_la-bIdxFile.lo: bIdxFile.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxFile.lo `test -f 'bIdxFile.c' || echo '$(srcdir)/'`bIdxFile.c
 
+libbitidx_la-bIdxArray.lo: bIdxArray.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxArray.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxArray.Tpo -c -o libbitidx_la-bIdxArray.lo `test -f 'bIdxArray.c' || echo '$(srcdir)/'`bIdxArray.c
+	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxArray.Tpo $(DEPDIR)/libbitidx_la-bIdxArray.Plo
+#	source='bIdxArray.c' object='libbitidx_la-bIdxArray.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxArray.lo `test -f 'bIdxArray.c' || echo '$(srcdir)/'`bIdxArray.c
+
 libbitidx_la-bIdxHash.lo: bIdxHash.c
 	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxHash.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxHash.Tpo -c -o libbitidx_la-bIdxHash.lo `test -f 'bIdxHash.c' || echo '$(srcdir)/'`bIdxHash.c
 	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxHash.Tpo $(DEPDIR)/libbitidx_la-bIdxHash.Plo
 #	source='bIdxHash.c' object='libbitidx_la-bIdxHash.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxHash.lo `test -f 'bIdxHash.c' || echo '$(srcdir)/'`bIdxHash.c
+
+libbitidx_la-bIdxBasicOp.lo: bIdxBasicOp.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxBasicOp.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxBasicOp.Tpo -c -o libbitidx_la-bIdxBasicOp.lo `test -f 'bIdxBasicOp.c' || echo '$(srcdir)/'`bIdxBasicOp.c
+	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxBasicOp.Tpo $(DEPDIR)/libbitidx_la-bIdxBasicOp.Plo
+#	source='bIdxBasicOp.c' object='libbitidx_la-bIdxBasicOp.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxBasicOp.lo `test -f 'bIdxBasicOp.c' || echo '$(srcdir)/'`bIdxBasicOp.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

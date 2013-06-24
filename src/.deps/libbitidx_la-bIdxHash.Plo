@@ -1,27 +1,28 @@
 libbitidx_la-bIdxHash.lo: bIdxHash.c bIdxHash.h bIdxDef.h \
- /usr/local/include/glib-2.0/glib.h \
+ /usr/include/stdio.h /usr/include/features.h /usr/include/bits/predefs.h \
+ /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+ /usr/lib/gcc/i486-linux-gnu/4.4.3/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i486-linux-gnu/4.4.3/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ bIdxArray.h bIdxBit.h /usr/local/include/glib-2.0/glib.h \
  /usr/local/include/glib-2.0/glib/galloca.h \
  /usr/local/include/glib-2.0/glib/gtypes.h \
  /usr/local/lib/glib-2.0/include/glibconfig.h \
  /usr/local/include/glib-2.0/glib/gmacros.h \
- /usr/lib/gcc/i486-linux-gnu/4.4.3/include/stddef.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/limits.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/syslimits.h \
- /usr/include/limits.h /usr/include/features.h \
- /usr/include/bits/predefs.h /usr/include/sys/cdefs.h \
- /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
- /usr/include/gnu/stubs-32.h /usr/include/bits/posix1_lim.h \
+ /usr/include/limits.h /usr/include/bits/posix1_lim.h \
  /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
  /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
- /usr/include/bits/stdio_lim.h \
  /usr/lib/gcc/i486-linux-gnu/4.4.3/include/float.h /usr/include/time.h \
- /usr/include/bits/time.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/xlocale.h \
+ /usr/include/bits/time.h /usr/include/xlocale.h \
  /usr/local/include/glib-2.0/glib/garray.h \
  /usr/local/include/glib-2.0/glib/gasyncqueue.h \
  /usr/local/include/glib-2.0/glib/gthread.h \
  /usr/local/include/glib-2.0/glib/gerror.h \
- /usr/lib/gcc/i486-linux-gnu/4.4.3/include/stdarg.h \
  /usr/local/include/glib-2.0/glib/gquark.h \
  /usr/local/include/glib-2.0/glib/gutils.h \
  /usr/local/include/glib-2.0/glib/gatomic.h \
@@ -79,9 +80,7 @@ libbitidx_la-bIdxHash.lo: bIdxHash.c bIdxHash.h bIdxDef.h \
  /usr/local/include/glib-2.0/glib/gtree.h \
  /usr/local/include/glib-2.0/glib/gurifuncs.h \
  /usr/local/include/glib-2.0/glib/gvarianttype.h \
- /usr/local/include/glib-2.0/glib/gvariant.h /usr/include/stdio.h \
- /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/include/bits/sys_errlist.h /usr/include/string.h \
+ /usr/local/include/glib-2.0/glib/gvariant.h /usr/include/string.h \
  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
  /usr/include/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
@@ -93,23 +92,7 @@ bIdxHash.h:
 
 bIdxDef.h:
 
-/usr/local/include/glib-2.0/glib.h:
-
-/usr/local/include/glib-2.0/glib/galloca.h:
-
-/usr/local/include/glib-2.0/glib/gtypes.h:
-
-/usr/local/lib/glib-2.0/include/glibconfig.h:
-
-/usr/local/include/glib-2.0/glib/gmacros.h:
-
-/usr/lib/gcc/i486-linux-gnu/4.4.3/include/stddef.h:
-
-/usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/limits.h:
-
-/usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/syslimits.h:
-
-/usr/include/limits.h:
+/usr/include/stdio.h:
 
 /usr/include/features.h:
 
@@ -123,6 +106,44 @@ bIdxDef.h:
 
 /usr/include/gnu/stubs-32.h:
 
+/usr/lib/gcc/i486-linux-gnu/4.4.3/include/stddef.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/lib/gcc/i486-linux-gnu/4.4.3/include/stdarg.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+bIdxArray.h:
+
+bIdxBit.h:
+
+/usr/local/include/glib-2.0/glib.h:
+
+/usr/local/include/glib-2.0/glib/galloca.h:
+
+/usr/local/include/glib-2.0/glib/gtypes.h:
+
+/usr/local/lib/glib-2.0/include/glibconfig.h:
+
+/usr/local/include/glib-2.0/glib/gmacros.h:
+
+/usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/limits.h:
+
+/usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
 /usr/include/bits/posix1_lim.h:
 
 /usr/include/bits/local_lim.h:
@@ -133,17 +154,11 @@ bIdxDef.h:
 
 /usr/include/bits/xopen_lim.h:
 
-/usr/include/bits/stdio_lim.h:
-
 /usr/lib/gcc/i486-linux-gnu/4.4.3/include/float.h:
 
 /usr/include/time.h:
 
 /usr/include/bits/time.h:
-
-/usr/include/bits/types.h:
-
-/usr/include/bits/typesizes.h:
 
 /usr/include/xlocale.h:
 
@@ -154,8 +169,6 @@ bIdxDef.h:
 /usr/local/include/glib-2.0/glib/gthread.h:
 
 /usr/local/include/glib-2.0/glib/gerror.h:
-
-/usr/lib/gcc/i486-linux-gnu/4.4.3/include/stdarg.h:
 
 /usr/local/include/glib-2.0/glib/gquark.h:
 
@@ -284,16 +297,6 @@ bIdxDef.h:
 /usr/local/include/glib-2.0/glib/gvarianttype.h:
 
 /usr/local/include/glib-2.0/glib/gvariant.h:
-
-/usr/include/stdio.h:
-
-/usr/include/libio.h:
-
-/usr/include/_G_config.h:
-
-/usr/include/wchar.h:
-
-/usr/include/bits/sys_errlist.h:
 
 /usr/include/string.h:
 

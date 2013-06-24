@@ -10,8 +10,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
     
     long long* ldest = (long long*)dest;
     long long* lsrc = (long long*)src;
-    byte* cdest = 0;
-    byte* csrc = 0;
+    bbyte* cdest = 0;
+    bbyte* csrc = 0;
     if(op == BIT_OP_AND)
     {
         while(mul)
@@ -22,8 +22,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mul --;
         }
 
-        cdest = (byte*)ldest;
-        csrc = (byte*)lsrc;
+        cdest = (bbyte*)ldest;
+        csrc = (bbyte*)lsrc;
         
         while(mod)
         {
@@ -43,8 +43,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mul --;
         }
 
-        cdest = (byte*)ldest;
-        csrc = (byte*)lsrc;
+        cdest = (bbyte*)ldest;
+        csrc = (bbyte*)lsrc;
         
         while(mod)
         {
@@ -64,8 +64,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mul --;
         }
 
-        cdest = (byte*)ldest;
-        csrc = (byte*)lsrc;
+        cdest = (bbyte*)ldest;
+        csrc = (bbyte*)lsrc;
         
         while(mod)
         {
@@ -86,8 +86,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mul --;
         }
 
-        cdest = (byte*)ldest;
-        csrc = (byte*)lsrc;
+        cdest = (bbyte*)ldest;
+        csrc = (bbyte*)lsrc;
         
         while(mod)
         {
@@ -108,8 +108,8 @@ int bIdxBit_op(sbit* dest, sbit* src, size_t len, int op)
             mul --;
         }
 
-        cdest = (byte*)ldest;
-        csrc = (byte*)lsrc;
+        cdest = (bbyte*)ldest;
+        csrc = (bbyte*)lsrc;
         
         while(mod)
         {
