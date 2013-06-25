@@ -1,3 +1,5 @@
+SUBDIRS = lib  
+
 AUTOMAKE_OPTIONS = foreign
 
 lib_LTLIBRARIES = libbitidx.la

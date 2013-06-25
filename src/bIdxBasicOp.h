@@ -1,4 +1,5 @@
 #ifndef BIDX_BASICOP_H
+
 #define BIDX_BASICOP_H
 #include "bIdxFile.h"
 #include "bIdxArray.h"
@@ -70,6 +71,12 @@ bbool bIdxBasOp_modify_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxBas
 
 bbool bIdxBasOp_remove_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxBasRes* pBasRes);
 
+
+bIdxArray* bIdxBasOp_lookup_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix);
+
+
+bbool bIdxBasOp_add_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix);
+bbool bIdxBasOp_rm_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix);
 
 
 #endif

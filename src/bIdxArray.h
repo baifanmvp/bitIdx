@@ -44,6 +44,16 @@ typedef struct st_bIdxIdRes
     size_t cnt;
 }bIdxBasRes;
 
+#define BIDXIDRES_INIT(pRes, cnt) do{pRes = (bIdxBasRes*)malloc(sizeof(bIdxBasRes)); (pRes)->cnt = cnt; (pRes)->ids = (bid_t*)malloc(sizeof(bid_t) * (cnt)); }while(0)
+
+#define BIDXIDRES_DESTORY(pRes) do{free(pRes->ids); free(pRes); }while(0)
+
+
+#define BIDXIDRES_SETID(pRes, i, id) (i < (pRes)->cnt ? (pRes)->ids[i] = id)
+#define BIDXIDRES_GETID(pRes, i) ((pRes)->ids[i])
+#define BIDXIDRES_CNT(pRes) ((pRes)->cnt)
+
+
 
 #define BIDXARRAY_POS_BLOCK(arr, pos) ((arr)->array[(pos)/BIDXBLOCK_ID_CNT]) 
 
@@ -98,5 +108,9 @@ bIdxArray* bIdxArray_dup(bIdxArray* pArray);
 bIdxBlock* bIdxBlock_init(char* org, char* tag, unsigned short startIdx, bbyte bitVal, bbyte* memblock);
 
 bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt);
+
+bIdxArray* bIdxIdRes_get_idxArray(bIdxBasRes* res, size_t off, size_t cnt);
+
+bIdxIdRes* bIdxIdRes_and_bIdxArray(bIdxBasRes* res, bIdxArray* arr);
 
 #endif
