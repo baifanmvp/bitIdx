@@ -75,7 +75,8 @@ am__DEPENDENCIES_1 =
 libbitidx_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libbitidx_la_OBJECTS = libbitidx_la-bIdxBit.lo \
 	libbitidx_la-bIdxFile.lo libbitidx_la-bIdxArray.lo \
-	libbitidx_la-bIdxHash.lo libbitidx_la-bIdxBasicOp.lo
+	libbitidx_la-bIdxHash.lo libbitidx_la-bIdxBasicOp.lo \
+	libbitidx_la-bIdxer.lo
 libbitidx_la_OBJECTS = $(am_libbitidx_la_OBJECTS)
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -256,15 +257,17 @@ libbitidx_la_SOURCES = bIdxBit.c\
                        bIdxFile.c\
                        bIdxArray.c\
                        bIdxHash.c\
-                       bIdxBasicOp.c
+                       bIdxBasicOp.c\
+                       bIdxer.c
 
-libbitidx_la_LIBADD = $(glib_LIBS)
-libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared
+libbitidx_la_LIBADD = $(glib_LIBS) -leql
+libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared -L/usr/local/lib -I/usr/local/include/ -I/usr/local/include/eql/
 nobase_include_HEADERS = bIdxBit.h\
                          bIdxFile.h\
                          bIdxArray.h\
                          bIdxHash.h\
-                         bIdxBasicOp.h
+                         bIdxBasicOp.h\
+                         bIdxer.h
 
 all: all-recursive
 
@@ -345,6 +348,7 @@ include ./$(DEPDIR)/libbitidx_la-bIdxBasicOp.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxBit.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxFile.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxHash.Plo
+include ./$(DEPDIR)/libbitidx_la-bIdxer.Plo
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -401,6 +405,13 @@ libbitidx_la-bIdxBasicOp.lo: bIdxBasicOp.c
 #	source='bIdxBasicOp.c' object='libbitidx_la-bIdxBasicOp.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxBasicOp.lo `test -f 'bIdxBasicOp.c' || echo '$(srcdir)/'`bIdxBasicOp.c
+
+libbitidx_la-bIdxer.lo: bIdxer.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxer.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxer.Tpo -c -o libbitidx_la-bIdxer.lo `test -f 'bIdxer.c' || echo '$(srcdir)/'`bIdxer.c
+	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxer.Tpo $(DEPDIR)/libbitidx_la-bIdxer.Plo
+#	source='bIdxer.c' object='libbitidx_la-bIdxer.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxer.lo `test -f 'bIdxer.c' || echo '$(srcdir)/'`bIdxer.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

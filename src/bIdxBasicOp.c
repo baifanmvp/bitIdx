@@ -426,7 +426,20 @@ bbool bIdxBasOp_remove_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr, bIdxBasR
     return TRUE;    
 }
 
-
+bIdxArray** bIdxBasOp_lookupOrg_array(bIdxBasOp* pbIdxBasOp, char* prefix )
+{
+    bIdxArray** lplp_array = (bIdxArray**)malloc(sizeof(bIdxArray*) * BIDX_ORG_LIMIT);
+    bPreVal* lp_pre_val = bIdxHash_lookup_pre(pbIdxBasOp->haIdx, prefix);
+    bindex_t idx = 0;
+    while(lp_pre_val)
+    {
+        lplp_array[idx++] = lp_pre_val->data;
+        lp_pre_val = lp_pre_val->next;
+    }
+    lplp_array[idx] = NULL;
+    return lplp_array;
+    
+}
 bIdxArray* bIdxBasOp_lookup_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix)
 {
     char* lp_all_key = NULL;
@@ -476,7 +489,7 @@ bbool bIdxBasOp_rm_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix)
     if(lp_all_val)
     {
         bIdxArray* lp_del_array = (bIdxArray*)(lp_all_val->data);
-        index_t idx = 0;
+        bindex_t idx = 0;
         //loop del block 
         while(idx < BIDXARRAY_BLOCK_CNT)
         {

@@ -75,7 +75,7 @@ cjson* cjson_reset(cjson* pJson)
 
 
 
-bbool cjson_parse(cjson* pJson, const char* strJson)
+cbool cjson_parse(cjson* pJson, const char* strJson)
 {
     if(pJson)
     {
@@ -126,7 +126,7 @@ cjson* cjson_obj_idx(cjson* pJson, int idx)
 
 
 
-bbool cjson_set_obj(cjson* pJson, const char* name, cjson* obj)
+cbool cjson_set_obj(cjson* pJson, const char* name, cjson* obj)
 {
     if(!pJson || !name || !obj)
     {
@@ -155,7 +155,7 @@ bbool cjson_set_obj(cjson* pJson, const char* name, cjson* obj)
 
 
 
-bbool cjson_set_str(cjson* pJson, const char* name, char* str)
+cbool cjson_set_str(cjson* pJson, const char* name, char* str)
 {
     if(!pJson || !name || !str)
     {
@@ -184,7 +184,7 @@ bbool cjson_set_str(cjson* pJson, const char* name, char* str)
 
 
 
-bbool cjson_set_num(cjson* pJson, const char* name, int num)
+cbool cjson_set_num(cjson* pJson, const char* name, int num)
 {
     if(!pJson || !name)
     {
@@ -210,7 +210,7 @@ bbool cjson_set_num(cjson* pJson, const char* name, int num)
     return 1;
 }
 
-bbool cjson_set_bool(cjson* pJson, const char* name, bbool b)
+cbool cjson_set_bool(cjson* pJson, const char* name, cbool b)
 {
     if(!pJson || !name)
     {
@@ -238,7 +238,7 @@ bbool cjson_set_bool(cjson* pJson, const char* name, bbool b)
 
 
 
-bbool cjson_set_null(cjson* pJson, const char* name)
+cbool cjson_set_null(cjson* pJson, const char* name)
 {
     if(!pJson || !name)
     {
@@ -272,7 +272,7 @@ bbool cjson_set_null(cjson* pJson, const char* name)
 
 
 
-bbool cjson_set_obj_idx(cjson* pJson, int idx, cjson* obj)
+cbool cjson_set_obj_idx(cjson* pJson, int idx, cjson* obj)
 {
     if(!pJson || !obj)
     {
@@ -302,7 +302,7 @@ bbool cjson_set_obj_idx(cjson* pJson, int idx, cjson* obj)
 
 
 
-bbool cjson_set_str_idx(cjson* pJson, int idx, char* str)
+cbool cjson_set_str_idx(cjson* pJson, int idx, char* str)
 {
     if(!pJson || !str)
     {
@@ -331,7 +331,7 @@ bbool cjson_set_str_idx(cjson* pJson, int idx, char* str)
 
 
 
-bbool cjson_set_num_idx(cjson* pJson, int idx, int num)
+cbool cjson_set_num_idx(cjson* pJson, int idx, int num)
 {
     if(!pJson)
     {
@@ -357,7 +357,7 @@ bbool cjson_set_num_idx(cjson* pJson, int idx, int num)
     return 1;
 }
 
-bbool cjson_set_bool_idx(cjson* pJson, int idx, bbool b)
+cbool cjson_set_bool_idx(cjson* pJson, int idx, cbool b)
 {
     if(!pJson)
     {
@@ -385,7 +385,7 @@ bbool cjson_set_bool_idx(cjson* pJson, int idx, bbool b)
 
 
 
-bbool cjson_set_null_idx(cjson* pJson, int idx)
+cbool cjson_set_null_idx(cjson* pJson, int idx)
 {
     if(!pJson)
     {

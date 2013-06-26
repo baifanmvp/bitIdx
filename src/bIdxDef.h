@@ -32,6 +32,10 @@ typedef int  bid_t;
 #define BIDX_JSONKEY_rmField       "rmField"
 #define BIDX_JSONKEY_record        "record"
 #define BIDX_JSONKEY_data          "data"
+#define BIDX_JSONKEY_code          "code"
+#define BIDX_JSONKEY_failTag       "failTag"
+#define BIDX_JSONKEY_docId         "docId"
+
 
 #define BIDX_JSONKEY_LABEL         "LABEL"
 #define BIDX_JSONKEY_READ          "READ"

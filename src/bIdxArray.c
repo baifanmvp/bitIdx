@@ -199,3 +199,61 @@ get_all_res :
 
 
 
+
+bIdxArray* bIdxIdRes_get_idxArray(bIdxBasRes* res, size_t off, size_t cnt)
+{
+    bIdxArray* lp_array = bIdxArray_new();
+    bindex_t idx = off;
+    bindex_t n_end = (cnt + off) < BIDXIDRES_CNT(res)? cnt + off : BIDXIDRES_CNT(res);
+    
+    while(idx < n_end)
+    {
+        bid_t id = BIDXIDRES_GETID(res, idx);
+        
+        if(!lp_array->array[id/BIDXBLOCK_ID_CNT])
+        {
+            bIdxBlock* p_new_block =  (bIdxBlock*)malloc(BIDXBLOCK_SIZE);
+            bIdxBlock_init("", "", id/BIDXBLOCK_ID_CNT, 0, (bbyte*)p_new_block);
+            bIdxArray_load_block(lp_array, p_new_block, id/BIDXBLOCK_ID_CNT);
+        }
+
+        bIdxArray_set_bitVal(lp_array, id, 1);
+        
+        idx++;
+    }
+    
+    return lp_array;
+        
+}
+
+//2个结构做and操作，生成一个idres，id按照老的idres里的id排序
+bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt)
+{
+    bIdxBasRes* lp_ret_res = NULL;
+    BIDXIDRES_INIT(lp_ret_res, cnt);
+    BIDXIDRES_CNT(lp_ret_res)=0;
+    
+    bindex_t idx = 0;
+    size_t n_hit_cnt = 0;
+    while(idx < BIDXIDRES_CNT(res))
+    {
+        bid_t id = BIDXIDRES_GETID(res, idx);
+        bbyte val;
+        bIdxArray_get_bitVal(arr, id, val);
+        
+        if(val)
+        {
+            if(n_hit_cnt >= off)
+            {
+                BIDXIDRES_SETID(lp_ret_res, BIDXIDRES_CNT(lp_ret_res), id);
+                BIDXIDRES_CNT(lp_ret_res)++;
+                
+                if(BIDXIDRES_CNT(lp_ret_res) == cnt)break;
+            }
+            n_hit_cnt++;
+        }
+        
+        idx++;
+    }
+    return lp_ret_res;
+}

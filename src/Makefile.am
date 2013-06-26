@@ -8,11 +8,12 @@ libbitidx_la_SOURCES = bIdxBit.c\
                        bIdxFile.c\
                        bIdxArray.c\
                        bIdxHash.c\
-                       bIdxBasicOp.c
+                       bIdxBasicOp.c\
+                       bIdxer.c
 
 
-libbitidx_la_LIBADD = $(glib_LIBS)
-libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared
+libbitidx_la_LIBADD = $(glib_LIBS) -leql
+libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared -L/usr/local/lib -I/usr/local/include/ -I/usr/local/include/eql/
 
 includedir=${prefix}/include/${bitidx_version}/
 
@@ -20,4 +21,5 @@ nobase_include_HEADERS = bIdxBit.h\
                          bIdxFile.h\
                          bIdxArray.h\
                          bIdxHash.h\
-                         bIdxBasicOp.h
+                         bIdxBasicOp.h\
+                         bIdxer.h

@@ -44,12 +44,12 @@ typedef struct st_bIdxIdRes
     size_t cnt;
 }bIdxBasRes;
 
-#define BIDXIDRES_INIT(pRes, cnt) do{pRes = (bIdxBasRes*)malloc(sizeof(bIdxBasRes)); (pRes)->cnt = cnt; (pRes)->ids = (bid_t*)malloc(sizeof(bid_t) * (cnt)); }while(0)
+#define BIDXIDRES_INIT(pRes, c) do{pRes = (bIdxBasRes*)malloc(sizeof(bIdxBasRes)); (pRes)->cnt = c; (pRes)->ids = (bid_t*)malloc(sizeof(bid_t) * (c)); }while(0)
 
 #define BIDXIDRES_DESTORY(pRes) do{free(pRes->ids); free(pRes); }while(0)
 
 
-#define BIDXIDRES_SETID(pRes, i, id) (i < (pRes)->cnt ? (pRes)->ids[i] = id)
+#define BIDXIDRES_SETID(pRes, i, id) do{if(i < (pRes)->cnt) (pRes)->ids[i] = id;}while(FALSE);
 #define BIDXIDRES_GETID(pRes, i) ((pRes)->ids[i])
 #define BIDXIDRES_CNT(pRes) ((pRes)->cnt)
 
@@ -73,24 +73,11 @@ typedef struct st_bIdxIdRes
         if((arr)->array[(pos) / BIDXBLOCK_ID_CNT])                      \
             bIdxBit_get_val( ((sbit*)((arr)->array[(pos) / BIDXBLOCK_ID_CNT]) + 1), \
                              (pos) % BIDXBLOCK_ID_CNT, val);            \
+        else                                                            \
+            val = 0;                                                    \
     }while(FALSE);
 
 
-#define BIDXARRAY_POS_SET_VAL(arr, pos, val)                        \
-    do                                                              \
-    {                                                               \
-        bIdxBlock* pBlock = BIDXARRAY_POS_BLOCK(arr, pos);          \
-        bIdxBit_set_val(pBlock + 1, (pos)%BIDXBLOCK_ID_CNT, (val)); \
-    }while(FALSE);
-
-#define BIDXARRAY_POS_GET_VAL(arr, pos, val)                        \
-    do                                                              \
-    {                                                               \
-        bIdxBlock* pBlock = BIDXARRAY_POS_BLOCK(arr, pos);          \
-        bIdxBit_get_val(pBlock + 1, (pos)%BIDXBLOCK_ID_CNT, (val)); \
-    }while(FALSE);
-
- 
 
 
 bIdxArray* bIdxArray_new();
@@ -111,6 +98,7 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt);
 
 bIdxArray* bIdxIdRes_get_idxArray(bIdxBasRes* res, size_t off, size_t cnt);
 
-bIdxIdRes* bIdxIdRes_and_bIdxArray(bIdxBasRes* res, bIdxArray* arr);
+//2个结构做and操作，生成一个idres，id按照老的idres里的id排序
+bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt);
 
 #endif
