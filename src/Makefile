@@ -74,6 +74,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libbitidx_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libbitidx_la_OBJECTS = libbitidx_la-bIdxBit.lo \
+	libbitidx_la-bIdxLock.lo libbitidx_la-bIdxThrPool.lo \
 	libbitidx_la-bIdxFile.lo libbitidx_la-bIdxArray.lo \
 	libbitidx_la-bIdxHash.lo libbitidx_la-bIdxBasicOp.lo \
 	libbitidx_la-bIdxer.lo
@@ -254,6 +255,8 @@ SUBDIRS = lib
 AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libbitidx.la
 libbitidx_la_SOURCES = bIdxBit.c\
+                       bIdxLock.c\
+                       bIdxThrPool.c\
                        bIdxFile.c\
                        bIdxArray.c\
                        bIdxHash.c\
@@ -263,6 +266,8 @@ libbitidx_la_SOURCES = bIdxBit.c\
 libbitidx_la_LIBADD = $(glib_LIBS) -leql
 libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared -L/usr/local/lib -I/usr/local/include/ -I/usr/local/include/eql/
 nobase_include_HEADERS = bIdxBit.h\
+                         bIdxLock.h\
+                         bIdxThrPool.h\
                          bIdxFile.h\
                          bIdxArray.h\
                          bIdxHash.h\
@@ -348,6 +353,8 @@ include ./$(DEPDIR)/libbitidx_la-bIdxBasicOp.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxBit.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxFile.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxHash.Plo
+include ./$(DEPDIR)/libbitidx_la-bIdxLock.Plo
+include ./$(DEPDIR)/libbitidx_la-bIdxThrPool.Plo
 include ./$(DEPDIR)/libbitidx_la-bIdxer.Plo
 
 .c.o:
@@ -377,6 +384,20 @@ libbitidx_la-bIdxBit.lo: bIdxBit.c
 #	source='bIdxBit.c' object='libbitidx_la-bIdxBit.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxBit.lo `test -f 'bIdxBit.c' || echo '$(srcdir)/'`bIdxBit.c
+
+libbitidx_la-bIdxLock.lo: bIdxLock.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxLock.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxLock.Tpo -c -o libbitidx_la-bIdxLock.lo `test -f 'bIdxLock.c' || echo '$(srcdir)/'`bIdxLock.c
+	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxLock.Tpo $(DEPDIR)/libbitidx_la-bIdxLock.Plo
+#	source='bIdxLock.c' object='libbitidx_la-bIdxLock.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxLock.lo `test -f 'bIdxLock.c' || echo '$(srcdir)/'`bIdxLock.c
+
+libbitidx_la-bIdxThrPool.lo: bIdxThrPool.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxThrPool.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxThrPool.Tpo -c -o libbitidx_la-bIdxThrPool.lo `test -f 'bIdxThrPool.c' || echo '$(srcdir)/'`bIdxThrPool.c
+	$(am__mv) $(DEPDIR)/libbitidx_la-bIdxThrPool.Tpo $(DEPDIR)/libbitidx_la-bIdxThrPool.Plo
+#	source='bIdxThrPool.c' object='libbitidx_la-bIdxThrPool.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libbitidx_la-bIdxThrPool.lo `test -f 'bIdxThrPool.c' || echo '$(srcdir)/'`bIdxThrPool.c
 
 libbitidx_la-bIdxFile.lo: bIdxFile.c
 	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libbitidx_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libbitidx_la-bIdxFile.lo -MD -MP -MF $(DEPDIR)/libbitidx_la-bIdxFile.Tpo -c -o libbitidx_la-bIdxFile.lo `test -f 'bIdxFile.c' || echo '$(srcdir)/'`bIdxFile.c

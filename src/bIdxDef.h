@@ -35,6 +35,7 @@ typedef int  bid_t;
 #define BIDX_JSONKEY_code          "code"
 #define BIDX_JSONKEY_failTag       "failTag"
 #define BIDX_JSONKEY_docId         "docId"
+#define BIDX_JSONKEY_total         "total"
 
 
 #define BIDX_JSONKEY_LABEL         "LABEL"

@@ -61,7 +61,7 @@ typedef struct st_bIdxIdRes
     do                                                                  \
     {                                                                   \
         if((arr)->array[(pos) / BIDXBLOCK_ID_CNT])                      \
-            bIdxBit_set_val( ((sbit*)((arr)->array[(pos) / BIDXBLOCK_ID_CNT]) + 1), \
+            bIdxBit_set_val( ( (sbit*) ( (arr)->array[(pos) / BIDXBLOCK_ID_CNT] + 1 ) ), \
                              (pos) % BIDXBLOCK_ID_CNT, val);            \
     }while(FALSE);
 
@@ -71,7 +71,7 @@ typedef struct st_bIdxIdRes
     do                                                                  \
     {                                                                   \
         if((arr)->array[(pos) / BIDXBLOCK_ID_CNT])                      \
-            bIdxBit_get_val( ((sbit*)((arr)->array[(pos) / BIDXBLOCK_ID_CNT]) + 1), \
+            bIdxBit_get_val( ( (sbit*) ( (arr)->array[(pos) / BIDXBLOCK_ID_CNT] + 1 ) ), \
                              (pos) % BIDXBLOCK_ID_CNT, val);            \
         else                                                            \
             val = 0;                                                    \

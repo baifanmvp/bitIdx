@@ -59,6 +59,7 @@ bIdxBlock* bIdxBasOp_get_free_idxBlock(bIdxBasOp* pbIdxBasOp)
     bIdxfreeNode* lp_free_node = pbIdxBasOp->free;
     pbIdxBasOp->free = pbIdxBasOp->free->next;
     bIdxBlock* p_new_block =  (bIdxBlock*)lp_free_node->node;
+    
     free(lp_free_node);
     return p_new_block;
     
@@ -118,7 +119,8 @@ bbool bIdxBasOp_load(bIdxBasOp* pbIdxBasOp)
         }
         else if (p_block->flag == BIDXBLOCK_VALID)
         {
-            
+
+            printf("find block valid !\n");
             char* lp_all_key = NULL;
             dup_all_string(p_block->org, p_block->tag, lp_all_key);
 
@@ -159,7 +161,7 @@ bbool bIdxBasOp_ext(bIdxBasOp* pbIdxBasOp)
     size_t n_src_msize = p_idx_file->msize;
     bIdxFile_append(p_idx_file, BIDX_EXT_SIZE);
         
-    baddr* p_start_addr = p_idx_file->mem + n_src_msize;
+    baddr* p_start_addr = p_idx_file->mem + n_src_msize + BIDX_FHEAD_SIZE;
     size_t n_unit_cnt = BIDX_EXT_UNIT_CNT;
     size_t i = 0;
     while(i != n_unit_cnt)
@@ -390,7 +392,7 @@ bbool bIdxBasOp_modify_atoi(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxBas
             if(!pDestArr->array[pBasRes->ids[idx] / BIDXBLOCK_ID_CNT])
             {
                 bIdxBlock* p_new_block =  bIdxBasOp_get_free_idxBlock(pbIdxBasOp);
-                bIdxBlock_init(org, tag, idx, 0, (bbyte*)p_new_block);
+                bIdxBlock_init(org, tag, pBasRes->ids[idx] / BIDXBLOCK_ID_CNT, 0, (bbyte*)p_new_block);
    
                 bIdxArray_load_block(pDestArr, p_new_block, pBasRes->ids[idx] / BIDXBLOCK_ID_CNT);
                 

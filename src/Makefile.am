@@ -5,6 +5,8 @@ AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libbitidx.la
 
 libbitidx_la_SOURCES = bIdxBit.c\
+                       bIdxLock.c\
+                       bIdxThrPool.c\
                        bIdxFile.c\
                        bIdxArray.c\
                        bIdxHash.c\
@@ -18,6 +20,8 @@ libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFIL
 includedir=${prefix}/include/${bitidx_version}/
 
 nobase_include_HEADERS = bIdxBit.h\
+                         bIdxLock.h\
+                         bIdxThrPool.h\
                          bIdxFile.h\
                          bIdxArray.h\
                          bIdxHash.h\

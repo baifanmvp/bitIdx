@@ -1,8 +1,5 @@
 #include "bIdxFile.h"
-#define BIDX_FHEAD_SIZE 4096
-#define BIDX_FILE_MAGIC 741596357
-#define BIDX_APPEND_MAXUNIT (1024*1024*10) //10 MB
-
+#define _LARGE_FILE64_SOURCE
 bIdxFile* bIdxFile_open(char* path)
 {
     struct stat f_info;
@@ -10,7 +7,7 @@ bIdxFile* bIdxFile_open(char* path)
     
     if(access(path, F_OK) == 0)
     {
-        if( (fd =open(path, O_RDWR) ) < 0 )
+        if( (fd =open(path, O_RDWR|O_LARGEFILE) ) < 0 )
         {
             perror("打开文件失败!!!");
             exit(-1);
@@ -99,13 +96,13 @@ bbool bIdxFile_append(bIdxFile* bFile, size_t fsize)
     }
     if(-1 == munmap(bFile->mem, bFile->fsize))
     {
-         printf("文件close映射不成功!!");
+         printf("文件close映射不成功!!\n");
          exit(-1);
     }
 
     if(-1 == munmap(bFile->head, sizeof(bIdxFileHead)))
     {
-         printf("文件close映射不成功!!");
+         printf("文件close映射不成功!!\n");
          exit(-1);
     }
 
@@ -198,7 +195,7 @@ bbool bIdxFile_close(bIdxFile* bFile)
         return FALSE;
     }
 
-    if(-1 == munmap(bFile, bFile->fsize))
+    if(-1 == munmap(bFile->mem, bFile->fsize))
     {
          printf("文件close映射不成功!!");
          exit(-1);

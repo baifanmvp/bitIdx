@@ -37,9 +37,13 @@ typedef struct
     
 }bIdxFile;
 
-#define bIdxFile_set_maxbit(pf, pos) ((pf)->maxbit = (pf)->maxbit >= (pos) ? (pf)->maxbit : (pos))
+#define bIdxFile_set_maxbit(pf, pos) do{if((pf)->maxbit < (pos))(pf)->maxbit =(pos); }while(FALSE);
 
 #define bIdxFile_get_maxbit(pf) ((pf)->maxbit)
+
+#define BIDX_FHEAD_SIZE 4096
+#define BIDX_FILE_MAGIC 741596357
+#define BIDX_APPEND_MAXUNIT (1024*1024*10) //10 MB
 
 bIdxFile* bIdxFile_open(char* path);
 
