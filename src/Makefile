@@ -136,12 +136,12 @@ am__relativize = \
     dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
   done; \
   reldir="$$dir2"
-ACLOCAL = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run tar
+ACLOCAL = ${SHELL} /home/bf/bitIdx/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/bf/bitIdx/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/bf/bitIdx/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/bf/bitIdx/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/bf/bitIdx/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -173,7 +173,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/bf/bitIdx/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -196,10 +196,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = VERSION
-abs_builddir = /home/bf/bf_tmp/bitIdx/src
-abs_srcdir = /home/bf/bf_tmp/bitIdx/src
-abs_top_builddir = /home/bf/bf_tmp/bitIdx
-abs_top_srcdir = /home/bf/bf_tmp/bitIdx
+abs_builddir = /home/bf/bitIdx/src
+abs_srcdir = /home/bf/bitIdx/src
+abs_top_builddir = /home/bf/bitIdx
+abs_top_srcdir = /home/bf/bitIdx
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
 am__include = include
@@ -230,7 +230,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include/${bitidx_version}/
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/bf/bf_tmp/bitIdx/install-sh
+install_sh = ${SHELL} /home/bf/bitIdx/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -263,9 +263,10 @@ libbitidx_la_SOURCES = bIdxBit.c\
                        bIdxBasicOp.c\
                        bIdxer.c
 
-libbitidx_la_LIBADD = $(glib_LIBS) -leql
+libbitidx_la_LIBADD = $(glib_LIBS) -leql -lbitjson
 libbitidx_la_CPPFLAGS = $(AM_CPPFLAGS) $(glib_CFLAGS)  -D_GNU_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64  -shared -L/usr/local/lib -I/usr/local/include/ -I/usr/local/include/eql/
 nobase_include_HEADERS = bIdxBit.h\
+                         bIdxDef.h\
                          bIdxLock.h\
                          bIdxThrPool.h\
                          bIdxFile.h\

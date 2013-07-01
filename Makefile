@@ -36,7 +36,7 @@ host_triplet = i686-pc-linux-gnu
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(top_srcdir)/configure AUTHORS COPYING \
-	ChangeLog INSTALL NEWS config.guess config.sub depcomp \
+	ChangeLog INSTALL NEWS compile config.guess config.sub depcomp \
 	install-sh ltmain.sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -103,12 +103,12 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run tar
+ACLOCAL = ${SHELL} /home/bf/bitIdx/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/bf/bitIdx/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/bf/bitIdx/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/bf/bitIdx/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/bf/bitIdx/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -140,7 +140,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/bf/bitIdx/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -163,10 +163,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = VERSION
-abs_builddir = /home/bf/bf_tmp/bitIdx
-abs_srcdir = /home/bf/bf_tmp/bitIdx
-abs_top_builddir = /home/bf/bf_tmp/bitIdx
-abs_top_srcdir = /home/bf/bf_tmp/bitIdx
+abs_builddir = /home/bf/bitIdx
+abs_srcdir = /home/bf/bitIdx
+abs_top_builddir = /home/bf/bitIdx
+abs_top_srcdir = /home/bf/bitIdx
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
 am__include = include
@@ -197,7 +197,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/bf/bf_tmp/bitIdx/install-sh
+install_sh = ${SHELL} /home/bf/bitIdx/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -218,7 +218,7 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-SUBDIRS = src utest  
+SUBDIRS = src utest bin
 ACLOCAL_AMFLAGS = -I m4
 all: all-recursive
 

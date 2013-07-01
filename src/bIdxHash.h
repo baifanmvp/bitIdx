@@ -29,6 +29,8 @@ bIdxHash* bIdxHash_new();
 
 bbool bIdxHash_delete(bIdxHash* pIdxHash);
 
+bbool bIdxHash_blocks_set_null(bIdxHash* pIdxHash);
+
 bbool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data);
 
 bAllVal* bIdxHash_lookup_all(bIdxHash* pIdxHash, char* all);

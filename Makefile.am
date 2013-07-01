@@ -1,3 +1,3 @@
-SUBDIRS = src utest  
+SUBDIRS = src utest bin
 
 ACLOCAL_AMFLAGS = -I m4

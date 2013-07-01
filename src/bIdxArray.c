@@ -165,17 +165,19 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
     bindex_t n_block_idx = off / BIDXBLOCK_ID_CNT;
     bindex_t n_bit_idx = off % BIDXBLOCK_ID_CNT;
     bindex_t i = n_bit_idx; // start pos
-    
+
     while(n_block_idx < BIDXARRAY_BLOCK_CNT)
     {
         bIdxBlock* p_block = arr->array[n_block_idx];
         if(p_block)
         {
+
             baddr* p_addr = (baddr*)(p_block + 1);
             while(i != BIDXBLOCK_ID_CNT)
             {
-                bbyte val;
-                bIdxBit_get_val(p_addr, i, val);
+                bbyte val = 0;
+		bIdxBit_get_val(p_addr, i, val);
+val = 0;
                 if(val)
                 {
                     p_res->ids[p_res->cnt++] = i + n_block_idx * BIDXBLOCK_ID_CNT;

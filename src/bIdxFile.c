@@ -64,7 +64,7 @@ bIdxFile* bIdxFile_open(char* path)
     pf->msize = pf->fsize - BIDX_FHEAD_SIZE;
     if(pf->msize)
     {
-        pf->mem = (baddr*)mmap(0, pf->fsize,
+        pf->mem = (baddr*)mmap64(0, pf->fsize,
                               PROT_READ|PROT_WRITE, MAP_SHARED,
                               pf->fd, 0);
         
@@ -138,7 +138,7 @@ bbool bIdxFile_append(bIdxFile* bFile, size_t fsize)
     bFile->msize = bFile->fsize - BIDX_FHEAD_SIZE;
     if(bFile->msize)
     {
-        bFile->mem = (baddr*)mmap(0, bFile->fsize,
+        bFile->mem = (baddr*)mmap64(0, bFile->fsize,
                               PROT_READ|PROT_WRITE, MAP_SHARED,
                               bFile->fd, 0);
         
@@ -152,7 +152,7 @@ bbool bIdxFile_append(bIdxFile* bFile, size_t fsize)
     {
         bFile->mem = 0;
     }        
-
+    return TRUE;
 }
 
 int bIdxFile_get_fd(bIdxFile* bFile)
@@ -202,5 +202,6 @@ bbool bIdxFile_close(bIdxFile* bFile)
     }
     
     close(bFile->fd);
+    free(bFile);
     return TRUE;
 }

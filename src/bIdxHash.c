@@ -9,7 +9,6 @@ bIdxHash* bIdxHash_new()
     p_idx_hash->preHash = g_hash_table_new(g_str_hash, g_str_equal);
     return p_idx_hash;
 }
-
 bbool bIdxHash_delete(bIdxHash* pIdxHash)
 {
     if(!pIdxHash)
@@ -73,6 +72,32 @@ bbool bIdxHash_delete(bIdxHash* pIdxHash)
     g_hash_table_destroy(pIdxHash->preHash);
     
     free(pIdxHash);
+    return TRUE;
+}
+
+bbool bIdxHash_blocks_set_null(bIdxHash* pIdxHash)
+{
+    if(!pIdxHash)
+    {
+        return FALSE;
+    }
+    
+    GList* list_value ;
+
+/////////////////////////////////////////////////////////////////////////////////////
+    list_value = g_hash_table_get_values(pIdxHash->allHash);
+
+    if (list_value != NULL)
+    {
+        GList* list_value_iter = g_list_first(list_value);
+        do {
+            bAllVal* p_all_val = (bAllVal*)list_value_iter->data;
+	    memset(p_all_val->data->array, 0, sizeof(bIdxArray*) * BIDXARRAY_BLOCK_CNT);
+        } while ((list_value_iter = g_list_next(list_value_iter)) != NULL);
+        g_list_free(list_value);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
     return TRUE;
 }
 

@@ -40,7 +40,7 @@ bbool bIdxBasOp_delete(bIdxBasOp* pbIdxBasOp)
         pbIdxBasOp->free = pbIdxBasOp->free->next;
         free(lp_tmp_node);
     }
-
+    free(pbIdxBasOp);
     return TRUE;
 
 }
@@ -73,8 +73,8 @@ bbool bIdxBasOp_reload(bIdxBasOp* pbIdxBasOp)
         return FALSE;
     }
 //clean mem
-    bIdxHash_delete(pbIdxBasOp->haIdx);
-    pbIdxBasOp->haIdx = bIdxHash_new();
+    bIdxHash_blocks_set_null(pbIdxBasOp->haIdx);
+//    pbIdxBasOp->haIdx = bIdxHash_new();
     
     while(pbIdxBasOp->free)
     {
@@ -120,7 +120,7 @@ bbool bIdxBasOp_load(bIdxBasOp* pbIdxBasOp)
         else if (p_block->flag == BIDXBLOCK_VALID)
         {
 
-            printf("find block valid !\n");
+	  //            printf("find block valid !\n");
             char* lp_all_key = NULL;
             dup_all_string(p_block->org, p_block->tag, lp_all_key);
 
@@ -148,6 +148,7 @@ bbool bIdxBasOp_load(bIdxBasOp* pbIdxBasOp)
         }
         i++;
     }    
+    return TRUE;
 }
 
 bbool bIdxBasOp_ext(bIdxBasOp* pbIdxBasOp)

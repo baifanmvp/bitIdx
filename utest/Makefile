@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
-bin_PROGRAMS = bidxtest$(EXEEXT)
+bin_PROGRAMS = bidxtest$(EXEEXT) optest$(EXEEXT)
 subdir = utest
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -52,6 +52,9 @@ PROGRAMS = $(bin_PROGRAMS)
 am_bidxtest_OBJECTS = bidxtest-bIdxTest.$(OBJEXT)
 bidxtest_OBJECTS = $(am_bidxtest_OBJECTS)
 bidxtest_DEPENDENCIES =
+am_optest_OBJECTS = optest-bIdxOpTest.$(OBJEXT)
+optest_OBJECTS = $(am_optest_OBJECTS)
+optest_DEPENDENCIES =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -65,17 +68,17 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(bidxtest_SOURCES)
-DIST_SOURCES = $(bidxtest_SOURCES)
+SOURCES = $(bidxtest_SOURCES) $(optest_SOURCES)
+DIST_SOURCES = $(bidxtest_SOURCES) $(optest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run aclocal-1.11
-AMTAR = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run tar
+ACLOCAL = ${SHELL} /home/bf/bitIdx/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/bf/bitIdx/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/bf/bitIdx/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/bf/bitIdx/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/bf/bitIdx/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -107,7 +110,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/bf/bf_tmp/bitIdx/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/bf/bitIdx/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
 NMEDIT = 
@@ -130,10 +133,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = VERSION
-abs_builddir = /home/bf/bf_tmp/bitIdx/utest
-abs_srcdir = /home/bf/bf_tmp/bitIdx/utest
-abs_top_builddir = /home/bf/bf_tmp/bitIdx
-abs_top_srcdir = /home/bf/bf_tmp/bitIdx
+abs_builddir = /home/bf/bitIdx/utest
+abs_srcdir = /home/bf/bitIdx/utest
+abs_top_builddir = /home/bf/bitIdx
+abs_top_srcdir = /home/bf/bitIdx
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
 am__include = include
@@ -164,7 +167,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/bf/bf_tmp/bitIdx/install-sh
+install_sh = ${SHELL} /home/bf/bitIdx/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -187,8 +190,11 @@ top_builddir = ..
 top_srcdir = ..
 AUTOMAKE_OPTIONS = foreign
 bidxtest_SOURCES = bIdxTest.c
-bidxtest_LDADD = -lbitidx
-bidxtest_CPPFLAGS = /usr/local/include/bitidx/
+bidxtest_LDADD = -lbitidx -lbitjson
+bidxtest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs`
+optest_SOURCES = bIdxOpTest.c
+optest_LDADD = -lbitidx -lbitjson
+optest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs`
 all: all-am
 
 .SUFFIXES:
@@ -269,6 +275,9 @@ clean-binPROGRAMS:
 bidxtest$(EXEEXT): $(bidxtest_OBJECTS) $(bidxtest_DEPENDENCIES) 
 	@rm -f bidxtest$(EXEEXT)
 	$(LINK) $(bidxtest_OBJECTS) $(bidxtest_LDADD) $(LIBS)
+optest$(EXEEXT): $(optest_OBJECTS) $(optest_DEPENDENCIES) 
+	@rm -f optest$(EXEEXT)
+	$(LINK) $(optest_OBJECTS) $(optest_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -277,6 +286,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/bidxtest-bIdxTest.Po
+include ./$(DEPDIR)/optest-bIdxOpTest.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -312,6 +322,20 @@ bidxtest-bIdxTest.obj: bIdxTest.c
 #	source='bIdxTest.c' object='bidxtest-bIdxTest.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxtest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o bidxtest-bIdxTest.obj `if test -f 'bIdxTest.c'; then $(CYGPATH_W) 'bIdxTest.c'; else $(CYGPATH_W) '$(srcdir)/bIdxTest.c'; fi`
+
+optest-bIdxOpTest.o: bIdxOpTest.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(optest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT optest-bIdxOpTest.o -MD -MP -MF $(DEPDIR)/optest-bIdxOpTest.Tpo -c -o optest-bIdxOpTest.o `test -f 'bIdxOpTest.c' || echo '$(srcdir)/'`bIdxOpTest.c
+	$(am__mv) $(DEPDIR)/optest-bIdxOpTest.Tpo $(DEPDIR)/optest-bIdxOpTest.Po
+#	source='bIdxOpTest.c' object='optest-bIdxOpTest.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(optest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o optest-bIdxOpTest.o `test -f 'bIdxOpTest.c' || echo '$(srcdir)/'`bIdxOpTest.c
+
+optest-bIdxOpTest.obj: bIdxOpTest.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(optest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT optest-bIdxOpTest.obj -MD -MP -MF $(DEPDIR)/optest-bIdxOpTest.Tpo -c -o optest-bIdxOpTest.obj `if test -f 'bIdxOpTest.c'; then $(CYGPATH_W) 'bIdxOpTest.c'; else $(CYGPATH_W) '$(srcdir)/bIdxOpTest.c'; fi`
+	$(am__mv) $(DEPDIR)/optest-bIdxOpTest.Tpo $(DEPDIR)/optest-bIdxOpTest.Po
+#	source='bIdxOpTest.c' object='optest-bIdxOpTest.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(optest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o optest-bIdxOpTest.obj `if test -f 'bIdxOpTest.c'; then $(CYGPATH_W) 'bIdxOpTest.c'; else $(CYGPATH_W) '$(srcdir)/bIdxOpTest.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

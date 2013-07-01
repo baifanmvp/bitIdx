@@ -404,7 +404,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile utest/Makefile src/Makefile"
+config_files=" Makefile utest/Makefile src/Makefile bin/Makefile src/lib/Makefile"
 config_commands=" depfiles libtool"
 
 ac_cs_usage="\
@@ -442,7 +442,7 @@ Copyright (C) 2009 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/bf/bf_tmp/bitIdx'
+ac_pwd='/home/bf/bitIdx'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -557,7 +557,7 @@ FGREP='/bin/grep -F'
 LD='/usr/bin/ld'
 NM='/usr/bin/nm -B'
 LN_S='ln -s'
-max_cmd_len='1572864'
+max_cmd_len='805306365'
 ac_objext='o'
 exeext=''
 lt_unset='unset'
@@ -723,6 +723,8 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "utest/Makefile") CONFIG_FILES="$CONFIG_FILES utest/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
+    "src/lib/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/Makefile" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -839,7 +841,7 @@ S["CFLAGS"]="-g3 -Wall -O0 "
 S["CC"]="gcc"
 S["am__untar"]="${AMTAR} xf -"
 S["am__tar"]="${AMTAR} chof - \"$$tardir\""
-S["AMTAR"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run tar"
+S["AMTAR"]="${SHELL} /home/bf/bitIdx/missing --run tar"
 S["am__leading_dot"]="."
 S["SET_MAKE"]=""
 S["AWK"]="gawk"
@@ -847,12 +849,12 @@ S["mkdir_p"]="/bin/mkdir -p"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /home/bf/bf_tmp/bitIdx/install-sh"
-S["MAKEINFO"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run automake-1.11"
-S["AUTOCONF"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/bf/bf_tmp/bitIdx/missing --run aclocal-1.11"
+S["install_sh"]="${SHELL} /home/bf/bitIdx/install-sh"
+S["MAKEINFO"]="${SHELL} /home/bf/bitIdx/missing --run makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/bf/bitIdx/missing --run autoheader"
+S["AUTOMAKE"]="${SHELL} /home/bf/bitIdx/missing --run automake-1.11"
+S["AUTOCONF"]="${SHELL} /home/bf/bitIdx/missing --run autoconf"
+S["ACLOCAL"]="${SHELL} /home/bf/bitIdx/missing --run aclocal-1.11"
 S["VERSION"]="VERSION"
 S["PACKAGE"]="full-package-name"
 S["CYGPATH_W"]="echo"

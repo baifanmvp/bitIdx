@@ -2,6 +2,7 @@
 #define BIDX_BIT_H
 #include "bIdxDef.h"
 #include <stdio.h>
+#define BYTE_VAL_7 7
 #define BYTE_VAL_8 8
 #define BIT_OP_AND 1
 #define BIT_OP_OR  2
@@ -12,14 +13,7 @@
 #define  bIdxBit_get_val(ps, pos, val)                                  \
     do                                                                  \
     {                                                                   \
-        size_t mod = ((size_t)(BYTE_VAL_8 - 1) & (pos));  /* pos % 8 */ \
-        size_t mul = (pos) >> 3; /* pos / 8 */                          \
-        bbyte base = 1;                                                  \
-                                                                        \
-        base <<= mod;                                                   \
-                                                                        \
-        base = *((ps) + mul) & base;                                    \
-        val = base >> mod;                                              \
+      val = *((ps) + (size_t)((pos) >> 3) ) & (1<<(BYTE_VAL_7 & (pos)));	\
     }while(0)
 
 #define bIdxBit_set_val(ps, pos, val)                                   \
@@ -27,7 +21,7 @@
         size_t mod = ((size_t)(BYTE_VAL_8 - 1) & pos);  /* pos % 8 */   \
         size_t mul = pos >> 3; /* pos / 8 */                            \
                                                                         \
-        bbyte base = 1;                                                  \
+        bbyte base = 1;							\
         base <<= mod;                                                   \
         if(val)                                                         \
         {                                                               \

@@ -9,7 +9,7 @@ AM_INIT_AUTOMAKE()
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_LIBTOOL
-
+AM_PROG_CC_C_O
 # Checks for libraries.
 AC_CONFIG_MACRO_DIR([m4])
 # Checks for header files.
@@ -27,5 +27,7 @@ AC_SUBST(bitidx_version)
 
 AC_CONFIG_FILES([Makefile
                  utest/Makefile
-                 src/Makefile])
+                 src/Makefile
+                 bin/Makefile
+                 src/lib/Makefile])
 AC_OUTPUT
