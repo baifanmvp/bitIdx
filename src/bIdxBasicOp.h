@@ -8,7 +8,7 @@
 
 #define BIDX_SPACE_UNIT   (BIDXBLOCK_SIZE)
 
-#define BIDX_EXT_SIZE     (1073741824)                 // 1G
+#define BIDX_EXT_SIZE     (1073741824/8)                 // 1G
 
 #define BIDX_EXT_UNIT_CNT (BIDX_EXT_SIZE/BIDX_SPACE_UNIT)  // 8096
 
