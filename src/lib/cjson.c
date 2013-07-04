@@ -9,6 +9,7 @@ cjson* cjson_new(const char* strJson)
     p_json->root = cJSON_Parse(strJson);
     p_json->child = p_json->root;
     p_json->parse = cjson_parse;
+    p_json->ref = cjson_ref;
     p_json->obj = cjson_obj;
     p_json->obj_i = cjson_obj_idx;
     p_json->obj_s = cjson_obj_str;
@@ -55,7 +56,7 @@ cjson* cjson_ref(cjson* pJson)
 {
     cjson* p_json_ref =  (cjson*)malloc(sizeof(cjson));
     memcpy(p_json_ref, pJson, sizeof(cjson));
-    pJson->ty = JSON_OBJECT_REF;
+    p_json_ref->ty = JSON_OBJECT_REF;
     return p_json_ref;
 }
 
@@ -86,6 +87,7 @@ cbool cjson_parse(cjson* pJson, const char* strJson)
             cJSON_Delete(pJson->root);
         }
         pJson->root = cJSON_Parse(strJson);
+        pJson->child = pJson->root;
     }
     return 1;
 }

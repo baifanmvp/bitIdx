@@ -16,22 +16,27 @@
       val = *((ps) + (size_t)((pos) >> 3) ) & (1<<(BYTE_VAL_7 & (pos)));	\
     }while(0)
 
+/* #define bIdxBit_set_val(ps, pos, val)                                   \ */
+/*     do                                                                  \ */
+/*     {                                                                   \ */
+/*                                                                         \ */
+/*         *(ps + ((pos) >> 3) ) = val ? *(ps + ((pos) >> 3) ) | (1<< ((size_t)(BYTE_VAL_8 - 1) & pos)) : \ */
+/*             *(ps + ((pos) >> 3) ) & ~(1<< ((size_t)(BYTE_VAL_8 - 1) & pos)); \ */
+/*     }while(0) */
+
+
 #define bIdxBit_set_val(ps, pos, val)                                   \
-    {                                                                   \
-        size_t mod = ((size_t)(BYTE_VAL_8 - 1) & pos);  /* pos % 8 */   \
-        size_t mul = pos >> 3; /* pos / 8 */                            \
-                                                                        \
-        bbyte base = 1;							\
-        base <<= mod;                                                   \
+    do{                                                                 \
         if(val)                                                         \
         {                                                               \
-            *(ps + mul) = *(ps + mul) | base;                           \
+            *(ps + ((pos) >> 3) ) |= (1 << ((size_t)(BYTE_VAL_7) & pos) ); \
         }                                                               \
         else                                                            \
         {                                                               \
-            *(ps + mul) = *(ps + mul) & ~base;                          \
+            *(ps + ((pos) >> 3) ) &= ~(1 << ((size_t)(BYTE_VAL_7) & pos) ); \
         }                                                               \
-    }
+    }while(0)
+
 
 
 

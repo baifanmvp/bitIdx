@@ -507,6 +507,9 @@ bbool bIdxBasOp_rm_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix)
             }
             idx++;
         }
+        bIdxHash_remove(pbIdxBasOp->haIdx, prefix, suffix);
+        free(lp_del_array->allKey);
+        free(lp_del_array);
         return TRUE;
     }
     else

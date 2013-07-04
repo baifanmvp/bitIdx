@@ -112,11 +112,13 @@ bbool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray*
          
     if(p_pre_val)
     {
+        p_new_val->prefix = p_pre_val->prefix;
         g_hash_table_insert(pIdxHash->preHash, prefix, p_new_val);            
     }
     else
     {
-        g_hash_table_insert(pIdxHash->preHash, strdup(prefix), p_new_val);    
+        p_new_val->prefix = strdup(prefix);
+        g_hash_table_insert(pIdxHash->preHash, p_new_val->prefix, p_new_val);    
     }
         
     bAllVal* p_all_val = (bAllVal*)malloc(sizeof(bAllVal));
@@ -153,3 +155,69 @@ bPreVal* bIdxHash_lookup_pre(bIdxHash* pIdxHash, char* prefix)
 
 
 
+
+bIdxArray*  bIdxHash_remove(bIdxHash* pIdxHash, char* prefix, char* suffix )
+{
+    if(!pIdxHash || !prefix || !suffix)
+    {
+        return NULL;
+    }
+    
+    char* lp_all_key = NULL;
+    dup_all_string(prefix, suffix, lp_all_key);
+    bIdxArray* lp_array = NULL;
+    
+    bAllVal* lp_all_val = bIdxHash_lookup_all(pIdxHash, lp_all_key);
+    free(lp_all_key);
+    if(lp_all_val)
+    {
+        g_hash_table_remove(pIdxHash->allHash, lp_all_key);
+        lp_array = lp_all_val->data;
+        free(lp_all_val);
+    }
+    else
+    {
+        return NULL;
+    }
+    
+    bPreVal* lp_pre_val = bIdxHash_lookup_pre(pIdxHash, prefix);
+    bPreVal* lp_last_preVal = NULL;
+    while(lp_pre_val)
+    {
+        if(strcmp(lp_pre_val->suffix, suffix) == 0)break;
+        lp_last_preVal = lp_pre_val;
+        lp_pre_val = lp_pre_val->next;
+    }
+    if(!lp_pre_val)
+    {
+        printf("bIdxHash_lookup_pre !=  bIdxHash_lookup_all ! [%s][%d]\n", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    if(lp_pre_val->data != lp_array)
+    {
+        printf("pre_array !=  all_array ! [%s][%d]\n", __FILE__, __LINE__);
+        exit(-1);
+    }
+
+    if(lp_last_preVal)
+    {
+        lp_last_preVal->next = lp_pre_val->next;
+    }
+    else
+    {
+        if(lp_pre_val->next)
+        {
+            g_hash_table_insert(pIdxHash->preHash, prefix, lp_pre_val->next);
+        }
+        else
+        {
+            g_hash_table_remove(pIdxHash->preHash, prefix);
+            free(lp_pre_val->prefix);            
+        }
+        
+        free(lp_pre_val->suffix);
+        free(lp_pre_val);
+    }
+    return lp_array;
+}

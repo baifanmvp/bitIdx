@@ -8,6 +8,7 @@ typedef void (*bFnFreeVal) (void*);
 typedef struct st_bPreVal
 {
     bIdxArray* data;
+    char* prefix;
     char* suffix;
     struct st_bPreVal *next;
 }bPreVal;
@@ -33,10 +34,13 @@ bbool bIdxHash_blocks_set_null(bIdxHash* pIdxHash);
 
 bbool bIdxHash_insert(bIdxHash* pIdxHash, char* prefix, char* suffix, bIdxArray* data);
 
+bIdxArray*  bIdxHash_remove(bIdxHash* pIdxHash, char* prefix, char* suffix);
+
 bAllVal* bIdxHash_lookup_all(bIdxHash* pIdxHash, char* all);
 
 bPreVal* bIdxHash_lookup_pre(bIdxHash* pIdxHash, char* prefix);
 
+bIdxArray*  bIdxHash_remove(bIdxHash* pIdxHash, char* prefix, char* suffix);
 
 
 #endif

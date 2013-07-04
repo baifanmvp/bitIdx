@@ -93,7 +93,7 @@ char* bIdxer_query_addtag(bIdxer* pbIdxer)
 {
     cjson* jsoner = pbIdxer->jsoner;
 
-    char* org = jsoner->rs(jsoner)->obj(jsoner, BIDX_JSONKEY_org)->obj_s(jsoner);
+     char* org = jsoner->rs(jsoner)->obj(jsoner, BIDX_JSONKEY_org)->obj_s(jsoner);
     char* lp_pre_tag = jsoner->rs(jsoner)->obj(jsoner, BIDX_JSONKEY_fieldId)->obj_s(jsoner);
     size_t n_tag_cnt = jsoner->rs(jsoner)->obj(jsoner, BIDX_JSONKEY_tagId)->ar_sz(jsoner);
     cjson* p_tags_json = jsoner->rs(jsoner)->obj(jsoner, BIDX_JSONKEY_tagId);                          
@@ -121,7 +121,7 @@ char* bIdxer_query_addtag(bIdxer* pbIdxer)
             lp_tag_jsoner->sstr(lp_tag_jsoner, lp_pre_tag, lp_suf_tag);
             
             lp_untag_jsoner->sobj_i(lp_untag_jsoner, 99999, lp_tag_jsoner);
-            cjson_delete(lp_tag_jsoner);
+            //  cjson_delete(lp_tag_jsoner);
         }
 
         free(lp_suf_tag);
@@ -135,10 +135,14 @@ char* bIdxer_query_addtag(bIdxer* pbIdxer)
     {
         lp_res_jsoner->sobj(lp_res_jsoner, BIDX_JSONKEY_failTag, lp_untag_jsoner);
     }
+    else
+    {
+        cjson_delete(lp_untag_jsoner);
+        
+    }
 
     
     char* lp_ret_str = lp_res_jsoner->obj_s(lp_res_jsoner);
-    cjson_delete(lp_untag_jsoner);
     cjson_delete(lp_res_jsoner);
     free(lp_pre_tag);
     free(org);
@@ -180,7 +184,6 @@ char* bIdxer_query_rmtag(bIdxer* pbIdxer)
             lp_tag_jsoner->sstr(lp_tag_jsoner, lp_pre_tag, lp_suf_tag);
             
             lp_untag_jsoner->sobj_i(lp_untag_jsoner, 99999, lp_tag_jsoner);
-            cjson_delete(lp_tag_jsoner);
         }
 
         free(lp_suf_tag);
@@ -194,10 +197,12 @@ char* bIdxer_query_rmtag(bIdxer* pbIdxer)
     {
         lp_res_jsoner->sobj(lp_res_jsoner, BIDX_JSONKEY_failTag, lp_untag_jsoner);
     }
-
+    else
+    {
+        cjson_delete(lp_untag_jsoner);
+    }
     
     char* lp_ret_str = lp_res_jsoner->obj_s(lp_res_jsoner);
-    cjson_delete(lp_untag_jsoner);
     cjson_delete(lp_res_jsoner);
     free(lp_pre_tag);
     free(org);
@@ -243,7 +248,7 @@ char* bIdxer_query_qryid(bIdxer* pbIdxer)
                 n_real_cnt++;
                 break;
             }
-            (*lp_loop_arrays)++;
+            (lp_loop_arrays)++;
         }
         cjson_delete(p_ids_tmp);
         free(lp_id);
@@ -262,7 +267,6 @@ char* bIdxer_query_qryid(bIdxer* pbIdxer)
     char* lp_ret_str = lp_res_json->obj_s(lp_res_json);
     
     cjson_delete(p_ids_json);
-    cjson_delete(lp_record_json);
     cjson_delete(lp_res_json);
     free(lp_org_arrays);
     free(org);
@@ -584,19 +588,22 @@ char* bIdxer_get_labelTag(bIdxer* pbIdxer, bIdxArray** pLoopArrays, bid_t id, ch
 
     while(*pLoopArrays)
     {
-        size_t n_all_len = strlen((*pLoopArrays)->allKey);
+
+        char* p_tag = strchr(((*pLoopArrays))->allKey, '.') + 1;
+
+        size_t n_tag_len = strlen(p_tag);
         
-        if( (p_iter_label + n_all_len) < (label + 4096 -2)
-            && n_all_len > strlen(BIDX_JSONKEY_LABEL)
-            && strncmp((*pLoopArrays)->allKey, BIDX_JSONKEY_LABEL, 5) == 0)
+        if( (p_iter_label + n_tag_len) < (label + 4096 -2)
+            && n_tag_len > strlen(BIDX_JSONKEY_LABEL)
+            && strncmp(p_tag, BIDX_JSONKEY_LABEL, 5) == 0)
         {
             bbyte val;
             bIdxArray_get_bitVal((*pLoopArrays), id, val);
             if(val)
             {
-                char* p_real_tag  = strchr((*pLoopArrays)->allKey, '.') + 1;
-                memcpy(p_iter_label, p_real_tag, n_all_len - 6);
-                p_iter_label += n_all_len - 6;
+                char* p_real_tag  = p_tag;
+                memcpy(p_iter_label, p_real_tag + 6, n_tag_len - 6);
+                p_iter_label += n_tag_len - 6;
                 *p_iter_label = ',';
                 p_iter_label ++;
             }
@@ -619,7 +626,8 @@ char* bIdxer_get_otherTag(bIdxer* pbIdxer, char* org , char* tag, bid_t id, char
         if(val)
         {
             char* p_real_tag  = strchr((lp_array)->allKey, '.') + 1;
-            memcpy(p_iter_tag, p_real_tag, 1);
+            char* p_suf_tag  = strchr(p_real_tag, '.') + 1;
+            memcpy(p_iter_tag, p_suf_tag, 1);
             p_iter_tag ++;
             *p_iter_tag = ',';
             p_iter_tag ++;
@@ -704,12 +712,13 @@ cjson* bIdxer_get_tag_byId(bIdxer* pbIdxer, bIdxBasRes *pIdRes)
     bIdxArray** lp_org_arrays = bIdxBasOp_lookupOrg_array(pbIdxer->pBasOp, org);
     
     
-    cjson* lp_record_json = cjson_new("{record:[]}");
+    cjson* lp_record_json = cjson_new("{}");
     char label[4096];
     char read[64];
     char star[64];
     char imp[64];
     
+    cjson* lp_tags_json = cjson_new("[]");
 
     bindex_t idx = 0;
     while(idx < n_ids_cnt)
@@ -753,13 +762,13 @@ cjson* bIdxer_get_tag_byId(bIdxer* pbIdxer, bIdxBasRes *pIdRes)
         lp_id_json->sstr(lp_id_json, "READ", read);
         lp_id_json->sstr(lp_id_json, "STAR", star);
         lp_id_json->sstr(lp_id_json, "IMP", imp);
-        lp_record_json->sobj_i(lp_record_json, lp_record_json->ar_sz(lp_record_json), lp_id_json);
+        lp_tags_json->sobj_i(lp_tags_json, lp_tags_json->ar_sz(lp_tags_json), lp_id_json);
 
-        cjson_delete(lp_id_json);
+//        cjson_delete(lp_id_json);
         
         idx++;
     }
-    
+    lp_record_json->sobj(lp_record_json, BIDX_JSONKEY_record, lp_tags_json);
     return lp_record_json;
 
 }
