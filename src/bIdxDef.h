@@ -36,6 +36,7 @@ typedef int  bid_t;
 #define BIDX_JSONKEY_failTag       "failTag"
 #define BIDX_JSONKEY_docId         "docId"
 #define BIDX_JSONKEY_total         "total"
+#define BIDX_JSONKEY_weight         "weight"
 
 
 #define BIDX_JSONKEY_LABEL         "LABEL"
@@ -64,6 +65,9 @@ typedef int  bid_t;
 #define BIDX_JSONVAL_READ          "READ"
 #define BIDX_JSONVAL_STAR          "STAR"
 #define BIDX_JSONVAL_IMP           "IMP"
+
+#define BIDX_EQL_SELECT           "SET OUTFORMAT json;\nselect weight"
+#define BIDX_EQL_SELECT_LEN           (20+13)
 
 
 #define ALLSTR_SIGN "." 

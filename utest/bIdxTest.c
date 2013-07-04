@@ -10,7 +10,7 @@
 int main()
 {
     unlink("./bidxer.test");
-    bIdxer* lp_idxer = bIdxer_new("./bidxer.test", "192.168.1.128", 30001);
+    bIdxer* lp_idxer = bIdxer_new("./bidxer.test");
     char* cmd;
     size_t sz = 0;
     while(1)
@@ -24,9 +24,13 @@ int main()
  
         
         printf("%s\n", cmd);
+        if(strcmp(cmd, "q") == 0)break;
         char* result = bIdxer_query(lp_idxer, cmd);
         printf("result : \n%s \n", result);
+        free(result);
+        free(cmd);
     }
+    free(cmd);
     bIdxer_delete(lp_idxer);
     return 0;
 }

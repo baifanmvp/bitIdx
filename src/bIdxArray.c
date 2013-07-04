@@ -19,6 +19,24 @@ bbool bIdxArray_delete(bIdxArray* pArray)
     return TRUE;
 }
 
+//use memory block ,don't mmap block
+bbool bIdxArray_clear_block(bIdxArray* pArray)
+{
+    if(!pArray)
+    {
+        return FALSE;
+    }
+    
+    int i = 0;
+    while(i < BIDXARRAY_BLOCK_CNT)
+    {
+        if(pArray->array[i])
+            free(pArray->array[i]);
+        i++;
+    }
+    return TRUE;
+}
+
 
 bbool bIdxArray_load_block(bIdxArray* pArray, bIdxBlock* pBlock, bindex_t idx)
 {
@@ -176,8 +194,7 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
             while(i != BIDXBLOCK_ID_CNT)
             {
                 bbyte val = 0;
-		bIdxBit_get_val(p_addr, i, val);
-val = 0;
+                bIdxBit_get_val(p_addr, i, val);
                 if(val)
                 {
                     p_res->ids[p_res->cnt++] = i + n_block_idx * BIDXBLOCK_ID_CNT;

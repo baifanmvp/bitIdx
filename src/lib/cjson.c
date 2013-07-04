@@ -57,6 +57,7 @@ cjson* cjson_ref(cjson* pJson)
     cjson* p_json_ref =  (cjson*)malloc(sizeof(cjson));
     memcpy(p_json_ref, pJson, sizeof(cjson));
     p_json_ref->ty = JSON_OBJECT_REF;
+    p_json_ref->root = p_json_ref->child;
     return p_json_ref;
 }
 
@@ -78,7 +79,7 @@ cjson* cjson_reset(cjson* pJson)
 
 cbool cjson_parse(cjson* pJson, const char* strJson)
 {
-    if(pJson)
+    if(pJson && pJson->ty == JSON_OBJECT_MASTER)
     {
         pJson->child = NULL;
         

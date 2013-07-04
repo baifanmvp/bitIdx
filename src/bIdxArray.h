@@ -84,6 +84,8 @@ bIdxArray* bIdxArray_new();
 
 bbool bIdxArray_delete(bIdxArray* pArray);
 
+bbool bIdxArray_clear_block(bIdxArray* pArray);
+
 bbool bIdxArray_load_block(bIdxArray* pArray, bIdxBlock* pBlock, bindex_t idx);
 
 bIdxBlock* bIdxArray_unload_block(bIdxArray* pArray, bindex_t idx);

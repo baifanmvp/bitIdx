@@ -183,11 +183,12 @@ bbool bIdxBasOp_ext(bIdxBasOp* pbIdxBasOp)
 //array to array
 bIdxArray* bIdxBasOp_searchOr_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
 {
-    if(!pbIdxBasOp || !pSrcArr)
-        return NULL;
-
     if(!pDestArr)
         return bIdxArray_dup(pSrcArr);
+    
+    if(!pbIdxBasOp || !pSrcArr)
+        return pDestArr;
+
 
     bindex_t idx = 0;
     
@@ -216,12 +217,13 @@ bIdxArray* bIdxBasOp_searchOr_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  
 
 bIdxArray* bIdxBasOp_searchAnd_atoa(bIdxBasOp* pbIdxBasOp, bIdxArray* pDestArr,  bIdxArray* pSrcArr)
 {
-    if(!pbIdxBasOp || !pSrcArr)
-        return NULL;
-
     if(!pDestArr)
         return bIdxArray_dup(pSrcArr);
 
+    if(!pbIdxBasOp || !pSrcArr)
+        return pDestArr;
+
+    
     bindex_t idx = 0;
     
     while(idx < BIDXARRAY_BLOCK_CNT)
