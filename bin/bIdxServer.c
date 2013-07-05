@@ -69,17 +69,17 @@ static bbool bIdxServer_recv(int fd, epointer ePointer, size32_t size, int flags
 
         if(n_recv == -1)
         {
-            if (errno == EINTR)
+            if (errno == EINTR || errno == EAGAIN)
             {
                 continue;
             }
-            perror("bIdxServer");
+            perror("bIdxServer -1 ");
             
             return EGG_FALSE;
         }
         else if(n_recv == 0)
         {
-            perror("bIdxServer");
+            perror("bIdxServer 0 ");
             return EGG_FALSE;
         }   
         else
@@ -140,7 +140,12 @@ static int bIdxServer_create_and_bind (char* ip, char *port)
       sfd = socket (rp->ai_family, rp->ai_socktype, rp->ai_protocol);
       if (sfd == -1)
         continue;
+      
+      int sock_reuse=1;
+      if(setsockopt(sfd, SOL_SOCKET,SO_REUSEADDR,(char *)&sock_reuse,sizeof(sock_reuse)) != 0)
+          perror("setsockopt");
 
+      
       s = bind (sfd, rp->ai_addr, rp->ai_addrlen);
       if (s == 0)
         {
@@ -211,25 +216,31 @@ bIdxServer* bIdxServer_init(char* ip, char *port)
 
 void* bIdxServer_processing_sk (void* arg)
 {
+    printf("  ==============================  bIdxServer_processing_sk  ============================== \n");
     bIdxServerArg* lp_arg = (bIdxServerArg*)arg;
     int fd = lp_arg->fd;
     bIdxer* pIdxer = lp_arg->idxer;
     int n_recv_sz = 0;
     bIdxServer_recv(fd, &n_recv_sz, sizeof(n_recv_sz), 0);
+    n_recv_sz = ntohl(n_recv_sz);
     char* lp_recv_buf = (char* ) malloc(n_recv_sz);
     bIdxServer_recv(fd, lp_recv_buf, n_recv_sz, 0);
 
-    char* lp_res = bIdxer_query(pIdxer, lp_recv_buf);
+    //   char* lp_res = bIdxer_query(pIdxer, "{\"op\":\"ADDTAG\", \"org\" : \"xian\", \"fieldId\" : \"LABEL\", \"tagId\" : [\"bf1\", \"bf2\",\"bf3\", \"bf4\", \"bf5\"] }");
 
-    int n_send_sz = strlen(lp_res);
-    char* lp_send_buf = (char* ) malloc(n_send_sz + sizeof(n_send_sz));
+    char* lp_res = bIdxer_query(pIdxer, lp_recv_buf);    
+    int n_host_send_sz = strlen(lp_res) + 1;
+    int n_net_send_sz = htonl(n_host_send_sz);
+    char* lp_send_buf = (char* ) malloc(n_host_send_sz + sizeof(n_host_send_sz));
     
-    memcpy(lp_send_buf, &n_send_sz, sizeof(n_send_sz));
-    memcpy(lp_send_buf + sizeof(n_send_sz), lp_res, n_send_sz);
+    memcpy(lp_send_buf, &n_net_send_sz, sizeof(n_net_send_sz));
+    memcpy(lp_send_buf + sizeof(n_net_send_sz), lp_res, n_host_send_sz);
     
-    bIdxServer_send(fd, lp_send_buf, n_send_sz, 0);
+    bIdxServer_send(fd, lp_send_buf, n_host_send_sz + sizeof(n_host_send_sz), 0);
     free(lp_send_buf);
     free(lp_res);
+    free(arg);
+    close(fd);
     return 0;
 }
 
@@ -242,7 +253,7 @@ int bIdxServer_request (bIdxServer* pServer)
     struct epoll_event event;
     struct epoll_event *events = pServer->events;
 
-    bIdxer* lp_idxer = bIdxer_new("/path/bitPath", "127.0.0.1", 8000);
+    bIdxer* lp_idxer = bIdxer_new("./bidxer.test");
 
 
     
@@ -293,36 +304,27 @@ int bIdxServer_request (bIdxServer* pServer)
                                      NI_NUMERICHOST | NI_NUMERICSERV);
                     if (s == 0)
                     {
-                        printf("Accepted connection on descriptor %d "
-                             "(host=%s, port=%s)\n", infd, hbuf, sbuf);
+                        //                       printf("Accepted connection on descriptor %d "
+//                             "(host=%s, port=%s)\n", infd, hbuf, sbuf);
                     }
 
-                  s = bIdxServer_set_non_blocking (infd);
-                  if (s == -1)
-                    abort ();
+                    bIdxServerArg* lp_arg = (bIdxServerArg*)malloc(sizeof(bIdxServerArg));
+                    lp_arg->fd = infd;
+                    lp_arg->idxer = lp_idxer;
+                    printf("    **************************  bIdxServer_processing_sk  ************************** \n");
+                    
+                    bIdxThrPool_working(pServer->pool, lp_arg, bIdxServer_processing_sk);
 
-                  event.data.fd = infd;
-                  event.events = EPOLLIN | EPOLLET;
-                  s = epoll_ctl (efd, EPOLL_CTL_ADD, infd, &event);
-                  if (s == -1)
-                    {
-                      perror ("epoll_ctl");
-                      abort ();
-                    }
+                    
                 }
               continue;
             }
           else
             {
-                bIdxServerArg st_arg;
-                st_arg.fd = events[i].data.fd;
-                st_arg.idxer = lp_idxer;
                 
-                bIdxThrPool_working(pServer->pool, &st_arg, bIdxServer_processing_sk);
-                
-                printf ("Closed connection on descriptor %d\n", events[i].data.fd);
+//                printf ("Closed connection on descriptor %d\n", events[i].data.fd);
 
-                close (events[i].data.fd);
+                //              close (events[i].data.fd);
             }
         }
     }
@@ -332,4 +334,127 @@ int bIdxServer_request (bIdxServer* pServer)
   close (sfd);
 
   return EXIT_SUCCESS;
+}
+
+
+/* int bIdxServer_request (bIdxServer* pServer) */
+/* { */
+
+/*     int efd = pServer->efd; */
+/*     int sfd = pServer->sfd; */
+/*     struct epoll_event event; */
+/*     struct epoll_event *events = pServer->events; */
+
+/*     bIdxer* lp_idxer = bIdxer_new("./bidxer.test"); */
+
+
+    
+/*     while (1) */
+/*     { */
+/*         int n, i; */
+
+/*         n = epoll_wait(efd, events, BIDX_MAXEVENTS, -1); */
+/*         for (i = 0; i < n; i++) */
+/*         { */
+/*             if ((events[i].events & EPOLLERR) || */
+/*                 (events[i].events & EPOLLHUP) || */
+/*               (!(events[i].events & EPOLLI ))) */
+/*             { */
+/*                 fprintf (stderr, "epoll error\n"); */
+/*                 close (events[i].data.fd); */
+/*                 continue; */
+/*             } */
+            
+/*             else if (sfd == events[i].data.fd) */
+/*             { */
+/*                 while (1) */
+/*                 { */
+/*                     struct sockaddr in_addr; */
+/*                     socklen_t in_len; */
+/*                     int infd; */
+/*                     char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV]; */
+                    
+/*                     in_len = sizeof in_addr; */
+/*                     infd = accept (sfd, &in_addr, &in_len); */
+/*                     if (infd == -1) */
+/*                     { */
+/*                         if ((errno == EAGAIN) || */
+/*                             (errno == EWOULDBLOCK)) */
+/*                         { */
+/*                             break; */
+/*                         } */
+/*                         else */
+/*                         { */
+/*                             perror ("accept"); */
+/*                             break; */
+/*                         } */
+/*                     } */
+
+/*                     int s = getnameinfo (&in_addr, in_len, */
+/*                                      hbuf, sizeof (hbuf), */
+/*                                      sbuf, sizeof (sbuf), */
+/*                                      NI_NUMERICHOST | NI_NUMERICSERV); */
+/*                     if (s == 0) */
+/*                     { */
+/*                         printf("Accepted connection on descriptor %d " */
+/*                              "(host=%s, port=%s)\n", infd, hbuf, sbuf); */
+/*                     } */
+
+/*                   s = bIdxServer_set_non_blocking (infd); */
+/*                   if (s == -1) */
+/*                     abort (); */
+
+/*                   event.data.fd = infd; */
+/*                   event.events = EPOLLIN | EPOLLET; */
+/*                   s = epoll_ctl (efd, EPOLL_CTL_ADD, infd, &event); */
+/*                   if (s == -1) */
+/*                     { */
+/*                       perror ("epoll_ctl add"); */
+/*                       abort (); */
+/*                     } */
+/*                 } */
+/*               continue; */
+/*             } */
+/*           else */
+/*             { */
+/*                 int s = epoll_ctl (efd, EPOLL_CTL_DEL, events[i].data.fd, events + i); */
+/*                 if (s == -1) */
+/*                 { */
+/*                     perror ("epoll_ctl del"); */
+/*                     abort (); */
+/*                 } */
+
+/*                 bIdxServerArg* lp_arg = (bIdxServerArg*)malloc(sizeof(bIdxServerArg)); */
+/*                 lp_arg->fd = events[i].data.fd; */
+/*                 lp_arg->idxer = lp_idxer; */
+                
+/*                 bIdxThrPool_working(pServer->pool, lp_arg, bIdxServer_processing_sk); */
+                
+/* //                printf ("Closed connection on descriptor %d\n", events[i].data.fd); */
+
+/*                 //              close (events[i].data.fd); */
+/*             } */
+/*         } */
+/*     } */
+
+/*   free (events); */
+
+/*   close (sfd); */
+
+/*   return EXIT_SUCCESS; */
+/* } */
+
+int main (int argc, char* argv[])
+    
+{
+    if(argc != 3)
+    {
+        printf("arg is error !\n");
+        exit(-1);
+    }
+    char* ip = argv[1];
+    char *port = argv[2];
+    bIdxServer* lp_idx_server = bIdxServer_init(ip, port);
+    bIdxServer_request (lp_idx_server);
+    return 0;
 }

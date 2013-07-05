@@ -10,13 +10,12 @@ void* bIdxThrPool_worker(void* arg)
     while(1)
     {
         pthread_cond_wait(&pThrData->ct, &pThrData->mt);
-
+       
         pThrData->running(pThrData->inRes);
         
         pThrData->flag = BIDXTHR_IDLE;
         
-        pthread_mutex_unlock(&pThrData->mt);
-
+        
     }
     return NULL;
 }
@@ -26,7 +25,7 @@ bIdxThrPool* bIdxThrPool_init(size_t thrCnt)
 {
     bIdxThrPool* lp_pool = (bIdxThrPool*) malloc(sizeof(bIdxThrPool));
     lp_pool->thrCnt = thrCnt;
-    lp_pool->thrData = (bIdxThrData*)malloc(sizeof(bIdxThrData));
+    lp_pool->thrData = (bIdxThrData*)malloc(sizeof(bIdxThrData) * lp_pool->thrCnt);
 
     pthread_attr_t attr;
     pthread_attr_init(&attr);
@@ -60,15 +59,7 @@ bbool bIdxThrPool_working(bIdxThrPool* pThrPool, void* inRes, bIdxFnWorker runni
         
         if(pthread_mutex_trylock( &(pThrPool->thrData[n_idx].mt) ) == 0)
         {
-            if(pThrPool->thrData[n_idx].flag = BIDXTHR_IDLE)
-            {
-                pThrPool->thrData[n_idx].flag = BIDXTHR_BUSY;
-                break;
-            }
-            else
-            {
-                pthread_mutex_unlock( &(pThrPool->thrData[n_idx].mt));
-            }
+            break;
         }
             
         if(++n_idx == pThrPool->thrCnt)

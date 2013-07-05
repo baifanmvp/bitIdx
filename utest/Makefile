@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
-bin_PROGRAMS = bidxtest$(EXEEXT) optest$(EXEEXT)
+bin_PROGRAMS = bidxtest$(EXEEXT) optest$(EXEEXT) bidxclient$(EXEEXT)
 subdir = utest
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -49,6 +49,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
+am_bidxclient_OBJECTS = bidxclient-bIdxClient.$(OBJEXT)
+bidxclient_OBJECTS = $(am_bidxclient_OBJECTS)
+bidxclient_DEPENDENCIES =
 am_bidxtest_OBJECTS = bidxtest-bIdxTest.$(OBJEXT)
 bidxtest_OBJECTS = $(am_bidxtest_OBJECTS)
 bidxtest_DEPENDENCIES =
@@ -68,8 +71,9 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(bidxtest_SOURCES) $(optest_SOURCES)
-DIST_SOURCES = $(bidxtest_SOURCES) $(optest_SOURCES)
+SOURCES = $(bidxclient_SOURCES) $(bidxtest_SOURCES) $(optest_SOURCES)
+DIST_SOURCES = $(bidxclient_SOURCES) $(bidxtest_SOURCES) \
+	$(optest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -192,6 +196,9 @@ AUTOMAKE_OPTIONS = foreign
 bidxtest_SOURCES = bIdxTest.c
 bidxtest_LDADD = -lbitidx -lbitjson
 bidxtest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs` -I/usr/local/include/eql/
+bidxclient_SOURCES = bIdxClient.c
+bidxclient_LDADD = -lbitidx -lbitjson
+bidxclient_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs` -I/usr/local/include/eql/
 optest_SOURCES = bIdxOpTest.c
 optest_LDADD = -lbitidx -lbitjson
 optest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs`
@@ -272,6 +279,9 @@ clean-binPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+bidxclient$(EXEEXT): $(bidxclient_OBJECTS) $(bidxclient_DEPENDENCIES) 
+	@rm -f bidxclient$(EXEEXT)
+	$(LINK) $(bidxclient_OBJECTS) $(bidxclient_LDADD) $(LIBS)
 bidxtest$(EXEEXT): $(bidxtest_OBJECTS) $(bidxtest_DEPENDENCIES) 
 	@rm -f bidxtest$(EXEEXT)
 	$(LINK) $(bidxtest_OBJECTS) $(bidxtest_LDADD) $(LIBS)
@@ -285,6 +295,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/bidxclient-bIdxClient.Po
 include ./$(DEPDIR)/bidxtest-bIdxTest.Po
 include ./$(DEPDIR)/optest-bIdxOpTest.Po
 
@@ -308,6 +319,20 @@ include ./$(DEPDIR)/optest-bIdxOpTest.Po
 #	source='$<' object='$@' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LTCOMPILE) -c -o $@ $<
+
+bidxclient-bIdxClient.o: bIdxClient.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxclient_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT bidxclient-bIdxClient.o -MD -MP -MF $(DEPDIR)/bidxclient-bIdxClient.Tpo -c -o bidxclient-bIdxClient.o `test -f 'bIdxClient.c' || echo '$(srcdir)/'`bIdxClient.c
+	$(am__mv) $(DEPDIR)/bidxclient-bIdxClient.Tpo $(DEPDIR)/bidxclient-bIdxClient.Po
+#	source='bIdxClient.c' object='bidxclient-bIdxClient.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxclient_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o bidxclient-bIdxClient.o `test -f 'bIdxClient.c' || echo '$(srcdir)/'`bIdxClient.c
+
+bidxclient-bIdxClient.obj: bIdxClient.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxclient_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT bidxclient-bIdxClient.obj -MD -MP -MF $(DEPDIR)/bidxclient-bIdxClient.Tpo -c -o bidxclient-bIdxClient.obj `if test -f 'bIdxClient.c'; then $(CYGPATH_W) 'bIdxClient.c'; else $(CYGPATH_W) '$(srcdir)/bIdxClient.c'; fi`
+	$(am__mv) $(DEPDIR)/bidxclient-bIdxClient.Tpo $(DEPDIR)/bidxclient-bIdxClient.Po
+#	source='bIdxClient.c' object='bidxclient-bIdxClient.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxclient_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o bidxclient-bIdxClient.obj `if test -f 'bIdxClient.c'; then $(CYGPATH_W) 'bIdxClient.c'; else $(CYGPATH_W) '$(srcdir)/bIdxClient.c'; fi`
 
 bidxtest-bIdxTest.o: bIdxTest.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxtest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT bidxtest-bIdxTest.o -MD -MP -MF $(DEPDIR)/bidxtest-bIdxTest.Tpo -c -o bidxtest-bIdxTest.o `test -f 'bIdxTest.c' || echo '$(srcdir)/'`bIdxTest.c
