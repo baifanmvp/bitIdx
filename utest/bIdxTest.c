@@ -10,7 +10,7 @@
 int main()
 {
     unlink("./bidxer.test");
-    bIdxer* lp_idxer = bIdxer_new("./bidxer.test");
+    bIdxer* lp_idxer = bIdxer_new("./bidxer.test", "127.0.0.1", 30001);
     char* cmd;
     size_t sz = 0;
     while(1)

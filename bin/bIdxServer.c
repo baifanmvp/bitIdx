@@ -216,7 +216,7 @@ bIdxServer* bIdxServer_init(char* ip, char *port)
 
 void* bIdxServer_processing_sk (void* arg)
 {
-    printf("  ==============================  bIdxServer_processing_sk  ============================== \n");
+    printf("  ==============================  bIdxServer_processing_sk  =======================%lu======= \n", pthread_self());
     bIdxServerArg* lp_arg = (bIdxServerArg*)arg;
     int fd = lp_arg->fd;
     bIdxer* pIdxer = lp_arg->idxer;
@@ -245,7 +245,7 @@ void* bIdxServer_processing_sk (void* arg)
 }
 
 
-int bIdxServer_request (bIdxServer* pServer)
+int bIdxServer_request (bIdxServer* pServer, char* eqlIp, unsigned short eqlPort)
 {
 
     int efd = pServer->efd;
@@ -253,9 +253,9 @@ int bIdxServer_request (bIdxServer* pServer)
     struct epoll_event event;
     struct epoll_event *events = pServer->events;
 
-    bIdxer* lp_idxer = bIdxer_new("./bidxer.test");
+    bIdxer* lp_idxer = bIdxer_new("./bidxer.test", eqlIp, eqlPort);
 
-
+    printf("load OK !\n");
     
     while (1)
     {
@@ -311,7 +311,6 @@ int bIdxServer_request (bIdxServer* pServer)
                     bIdxServerArg* lp_arg = (bIdxServerArg*)malloc(sizeof(bIdxServerArg));
                     lp_arg->fd = infd;
                     lp_arg->idxer = lp_idxer;
-                    printf("    **************************  bIdxServer_processing_sk  ************************** \n");
                     
                     bIdxThrPool_working(pServer->pool, lp_arg, bIdxServer_processing_sk);
 
@@ -447,7 +446,7 @@ int bIdxServer_request (bIdxServer* pServer)
 int main (int argc, char* argv[])
     
 {
-    if(argc != 3)
+    if(argc != 3 || argc != 5)
     {
         printf("arg is error !\n");
         exit(-1);
@@ -455,6 +454,13 @@ int main (int argc, char* argv[])
     char* ip = argv[1];
     char *port = argv[2];
     bIdxServer* lp_idx_server = bIdxServer_init(ip, port);
-    bIdxServer_request (lp_idx_server);
+    if(argc == 3)
+    {
+        bIdxServer_request (lp_idx_server, "127.0.0.1", 30001);
+    }
+    else
+    {
+        bIdxServer_request (lp_idx_server, argv[3], aoti(argv[4]));
+    }
     return 0;
 }

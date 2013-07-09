@@ -34,7 +34,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
-bin_PROGRAMS = bidxtest$(EXEEXT) optest$(EXEEXT) bidxclient$(EXEEXT)
+bin_PROGRAMS = bidxtest$(EXEEXT) optest$(EXEEXT) bidxclient$(EXEEXT) \
+	locktest$(EXEEXT)
 subdir = utest
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -55,6 +56,9 @@ bidxclient_DEPENDENCIES =
 am_bidxtest_OBJECTS = bidxtest-bIdxTest.$(OBJEXT)
 bidxtest_OBJECTS = $(am_bidxtest_OBJECTS)
 bidxtest_DEPENDENCIES =
+am_locktest_OBJECTS = locktest-locktest.$(OBJEXT)
+locktest_OBJECTS = $(am_locktest_OBJECTS)
+locktest_DEPENDENCIES =
 am_optest_OBJECTS = optest-bIdxOpTest.$(OBJEXT)
 optest_OBJECTS = $(am_optest_OBJECTS)
 optest_DEPENDENCIES =
@@ -71,9 +75,10 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(bidxclient_SOURCES) $(bidxtest_SOURCES) $(optest_SOURCES)
+SOURCES = $(bidxclient_SOURCES) $(bidxtest_SOURCES) \
+	$(locktest_SOURCES) $(optest_SOURCES)
 DIST_SOURCES = $(bidxclient_SOURCES) $(bidxtest_SOURCES) \
-	$(optest_SOURCES)
+	$(locktest_SOURCES) $(optest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -202,6 +207,9 @@ bidxclient_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags -
 optest_SOURCES = bIdxOpTest.c
 optest_LDADD = -lbitidx -lbitjson
 optest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs`
+locktest_SOURCES = locktest.c
+locktest_LDADD = -lbitidx -lbitjson
+locktest_CPPFLAGS = /usr/local/include/bitidx/ `pkg-config glib-2.0 --cflags --libs`
 all: all-am
 
 .SUFFIXES:
@@ -285,6 +293,9 @@ bidxclient$(EXEEXT): $(bidxclient_OBJECTS) $(bidxclient_DEPENDENCIES)
 bidxtest$(EXEEXT): $(bidxtest_OBJECTS) $(bidxtest_DEPENDENCIES) 
 	@rm -f bidxtest$(EXEEXT)
 	$(LINK) $(bidxtest_OBJECTS) $(bidxtest_LDADD) $(LIBS)
+locktest$(EXEEXT): $(locktest_OBJECTS) $(locktest_DEPENDENCIES) 
+	@rm -f locktest$(EXEEXT)
+	$(LINK) $(locktest_OBJECTS) $(locktest_LDADD) $(LIBS)
 optest$(EXEEXT): $(optest_OBJECTS) $(optest_DEPENDENCIES) 
 	@rm -f optest$(EXEEXT)
 	$(LINK) $(optest_OBJECTS) $(optest_LDADD) $(LIBS)
@@ -297,6 +308,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/bidxclient-bIdxClient.Po
 include ./$(DEPDIR)/bidxtest-bIdxTest.Po
+include ./$(DEPDIR)/locktest-locktest.Po
 include ./$(DEPDIR)/optest-bIdxOpTest.Po
 
 .c.o:
@@ -347,6 +359,20 @@ bidxtest-bIdxTest.obj: bIdxTest.c
 #	source='bIdxTest.c' object='bidxtest-bIdxTest.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bidxtest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o bidxtest-bIdxTest.obj `if test -f 'bIdxTest.c'; then $(CYGPATH_W) 'bIdxTest.c'; else $(CYGPATH_W) '$(srcdir)/bIdxTest.c'; fi`
+
+locktest-locktest.o: locktest.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(locktest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT locktest-locktest.o -MD -MP -MF $(DEPDIR)/locktest-locktest.Tpo -c -o locktest-locktest.o `test -f 'locktest.c' || echo '$(srcdir)/'`locktest.c
+	$(am__mv) $(DEPDIR)/locktest-locktest.Tpo $(DEPDIR)/locktest-locktest.Po
+#	source='locktest.c' object='locktest-locktest.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(locktest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o locktest-locktest.o `test -f 'locktest.c' || echo '$(srcdir)/'`locktest.c
+
+locktest-locktest.obj: locktest.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(locktest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT locktest-locktest.obj -MD -MP -MF $(DEPDIR)/locktest-locktest.Tpo -c -o locktest-locktest.obj `if test -f 'locktest.c'; then $(CYGPATH_W) 'locktest.c'; else $(CYGPATH_W) '$(srcdir)/locktest.c'; fi`
+	$(am__mv) $(DEPDIR)/locktest-locktest.Tpo $(DEPDIR)/locktest-locktest.Po
+#	source='locktest.c' object='locktest-locktest.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(locktest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o locktest-locktest.obj `if test -f 'locktest.c'; then $(CYGPATH_W) 'locktest.c'; else $(CYGPATH_W) '$(srcdir)/locktest.c'; fi`
 
 optest-bIdxOpTest.o: bIdxOpTest.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(optest_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT optest-bIdxOpTest.o -MD -MP -MF $(DEPDIR)/optest-bIdxOpTest.Tpo -c -o optest-bIdxOpTest.o `test -f 'bIdxOpTest.c' || echo '$(srcdir)/'`bIdxOpTest.c

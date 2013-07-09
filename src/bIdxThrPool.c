@@ -1,4 +1,5 @@
 #include "bIdxThrPool.h"
+#include <unistd.h>
 
 void* bIdxThrPool_worker(void* arg)
 {
@@ -7,6 +8,8 @@ void* bIdxThrPool_worker(void* arg)
     {
         return NULL;
     }
+    pThrData->flag = BIDXTHR_IDLE;
+
     while(1)
     {
         pthread_cond_wait(&pThrData->ct, &pThrData->mt);
@@ -14,7 +17,6 @@ void* bIdxThrPool_worker(void* arg)
         pThrData->running(pThrData->inRes);
         
         pThrData->flag = BIDXTHR_IDLE;
-        
         
     }
     return NULL;
@@ -56,22 +58,35 @@ bbool bIdxThrPool_working(bIdxThrPool* pThrPool, void* inRes, bIdxFnWorker runni
     bindex_t n_idx = 0;
     while(1)
     {
-        
-        if(pthread_mutex_trylock( &(pThrPool->thrData[n_idx].mt) ) == 0)
+        //避免lock多次调用 提升性能
+        if(pThrPool->thrData[n_idx].flag == BIDXTHR_IDLE)
         {
-            break;
-        }
-            
+            if(pthread_mutex_trylock( &(pThrPool->thrData[n_idx].mt) ) == 0)
+            {
+                if(pThrPool->thrData[n_idx].flag == BIDXTHR_BUSY)
+                {
+                    pthread_mutex_unlock( &(pThrPool->thrData[n_idx].mt));
+                }
+                else
+                {
+                    pThrPool->thrData[n_idx].inRes = inRes;
+                    pThrPool->thrData[n_idx].running = running;
+                    
+                    pthread_cond_signal(&pThrPool->thrData[n_idx].ct);
+                    printf("    **************************  bIdxServer_processing_sk  ************************[%lu]*** \n", pThrPool->thrData[n_idx].id);
+                    
+                    pThrPool->thrData[n_idx].flag = BIDXTHR_BUSY;
+                    
+                    pthread_mutex_unlock( &(pThrPool->thrData[n_idx].mt));
+                    return TRUE;
+                }
+            }
+        }   
         if(++n_idx == pThrPool->thrCnt)
         {
             n_idx = 0;
             usleep(5000);
         }
     }
-    pThrPool->thrData[n_idx].inRes = inRes;
-    pThrPool->thrData[n_idx].running = running;
-    pthread_cond_signal(&pThrPool->thrData[n_idx].ct);
-    pthread_mutex_unlock( &(pThrPool->thrData[n_idx].mt));
-    return TRUE;
     
 }

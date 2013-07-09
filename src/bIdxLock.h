@@ -15,11 +15,13 @@ typedef struct _bIdxLock
 
 bIdxLock* bIdxLock_new();
 
-bbool bIdxLock_w_lock(bIdxLock* plock);
+bbool bIdxLock_delete(bIdxLock* plock);
+
+bbool bIdxLock_x_lock(bIdxLock* plock);
 
 bbool bIdxLock_s_lock(bIdxLock* plock);
 
 bbool bIdxLock_s_unlock(bIdxLock* plock);
 
-bbool bIdxLock_w_unlock(bIdxLock* plock);
+bbool bIdxLock_x_unlock(bIdxLock* plock);
 #endif

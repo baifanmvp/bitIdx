@@ -20,11 +20,15 @@ static bIdxBasRes* bIdxer_get_ids_byEql(bIdxer* pbIdxer, char* query, char* orde
 
 
 
-bIdxer* bIdxer_new(char* bitPath)
+bIdxer* bIdxer_new(char* bitPath,char* eqlIp, unsigned short eqlPort)
 {
     bIdxer* p_bidxer = (bIdxer*)malloc(sizeof(bIdxer));
     
     p_bidxer->pBasOp = bIdxBasOp_new(bitPath);
+    p_bidxer->pLock = bIdxLock_new();
+    p_bidxer->eqlIp = strdup(eqlIp);
+    p_bidxer->eqlPort = eqlPort;
+
     return p_bidxer;
     
 }
@@ -33,7 +37,7 @@ bbool bIdxer_delete(bIdxer* pbIdxer)
     if(pbIdxer)
     {
         bIdxBasOp_delete(pbIdxer->pBasOp);
-        
+        free(pbIdxer->eqlIp);
         free(pbIdxer);
         return TRUE;
     }
@@ -56,27 +60,41 @@ char* bIdxer_query(bIdxer* pbIdxer, char* query)
 
     if (strcmp(lp_op, BIDX_JSONVAL_ADDTAG) == 0)
     {
-        lp_res_str = bIdxer_query_addtag(pbIdxer, jsoner);  
+        bIdxLock_x_lock(pbIdxer->pLock);
+        lp_res_str = bIdxer_query_addtag(pbIdxer, jsoner);
+        bIdxLock_x_unlock(pbIdxer->pLock);
+        
     }
     else if (strcmp(lp_op, BIDX_JSONVAL_RMTAG) == 0)
     {
+        bIdxLock_x_lock(pbIdxer->pLock);
         lp_res_str = bIdxer_query_rmtag(pbIdxer, jsoner);  
+        bIdxLock_x_unlock(pbIdxer->pLock);
     }
     else if (strcmp(lp_op, BIDX_JSONVAL_QRYID) == 0)
     {
+        bIdxLock_s_lock(pbIdxer->pLock);
         lp_res_str = bIdxer_query_qryid(pbIdxer, jsoner);
+        bIdxLock_s_unlock(pbIdxer->pLock);
     }
     else if (strcmp(lp_op, BIDX_JSONVAL_QRYCND) == 0)
     {
+        bIdxLock_s_lock(pbIdxer->pLock);
         lp_res_str = bIdxer_query_qrycnd(pbIdxer, jsoner);
+        bIdxLock_s_unlock(pbIdxer->pLock);
     }
     else if (strcmp(lp_op, BIDX_JSONVAL_UTAGID) == 0)
     {
+        bIdxLock_x_lock(pbIdxer->pLock);
         lp_res_str = bIdxer_query_utagid(pbIdxer, jsoner);  
+        bIdxLock_x_unlock(pbIdxer->pLock);
     }
     else if (strcmp(lp_op, BIDX_JSONVAL_UTAGCND) == 0)
     {
+        bIdxLock_x_lock(pbIdxer->pLock);
         lp_res_str = bIdxer_query_utagcnd(pbIdxer, jsoner);
+        bIdxLock_x_unlock(pbIdxer->pLock);
+
     }
     cjson_delete(jsoner);
     free(lp_op);
@@ -797,7 +815,7 @@ bIdxBasRes* bIdxer_get_ids_byEql(bIdxer* pbIdxer, char* query, char* orderby)
     memcpy(p_sql + BIDX_EQL_SELECT_LEN, query, n_query_len);
     memcpy(p_sql + BIDX_EQL_SELECT_LEN + n_query_len, orderby, n_orderby_len);
 
-    eqlClient* lp_client = eqlClient_new(EQL_CLIENT_INET, "127.0.0.1", 30001);
+    eqlClient* lp_client = eqlClient_new(EQL_CLIENT_INET, pbIdxer->eqlIp, pbIdxer->eqlPort);
 
     eqlClient_query(lp_client, p_sql);
     

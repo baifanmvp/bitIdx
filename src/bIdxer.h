@@ -1,5 +1,6 @@
 #ifndef BIDXER_H_
 #define BIDXER_H_
+#include "bIdxLock.h"
 #include "bIdxBasicOp.h"
 #include "lib/cjson.h"
 #include "eqlClient.h"
@@ -7,9 +8,12 @@
 typedef struct st_bIdxer
 {
     bIdxBasOp* pBasOp;
+    bIdxLock* pLock;
+    char* eqlIp;
+    unsigned short eqlPort;
 }bIdxer;
 
-bIdxer* bIdxer_new(char* bitPath);
+bIdxer* bIdxer_new(char* bitPath, char* eqlIp, unsigned short eqlPort);
 
 char* bIdxer_query(bIdxer* pbIdxer, char* query);
 
