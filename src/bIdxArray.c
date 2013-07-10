@@ -162,7 +162,7 @@ bIdxBlock* bIdxBlock_init(char* org, char* tag, unsigned short startIdx, bbyte b
     return p_idx_block;
 }
 
-bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
+bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt, size_t *pTotal)
 {
     if(!arr)
     {
@@ -175,7 +175,7 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
          return NULL;
     }
 
-    
+    *pTotal = 0;
     bIdxBasRes* p_res = (bIdxBasRes*)malloc(sizeof(bIdxBasRes));
     p_res->ids = (bid_t*)malloc(sizeof(bid_t) * cnt);
     p_res->cnt = 0;
@@ -197,10 +197,11 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
                 bIdxBit_get_val(p_addr, i, val);
                 if(val)
                 {
-                    p_res->ids[p_res->cnt++] = i + n_block_idx * BIDXBLOCK_ID_CNT;
-                    if(p_res->cnt == cnt)
+                    (*pTotal) ++;
+                    if(p_res->cnt != cnt)
                     {
-                        goto get_all_res;
+                        p_res->ids[p_res->cnt++] = i + n_block_idx * BIDXBLOCK_ID_CNT;
+                        
                     }
                 }
                 
@@ -212,7 +213,6 @@ bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt)
         n_block_idx ++;
     }
     
-get_all_res :
     return p_res;
 }
 
@@ -246,12 +246,17 @@ bIdxArray* bIdxIdRes_get_idxArray(bIdxBasRes* res, size_t off, size_t cnt)
 }
 
 //2个结构做and操作，生成一个idres，id按照老的idres里的id排序
-bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt)
+bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt, size_t* pTotal)
 {
+    if(!arr || !res)
+    {
+        return NULL;
+    }
+    
     bIdxBasRes* lp_ret_res = NULL;
     BIDXIDRES_INIT(lp_ret_res, cnt);
-    BIDXIDRES_CNT(lp_ret_res)=0;
-    
+
+    size_t n_res_idx = 0;
     bindex_t idx = 0;
     size_t n_hit_cnt = 0;
     while(idx < BIDXIDRES_CNT(res))
@@ -264,15 +269,18 @@ bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t
         {
             if(n_hit_cnt >= off)
             {
-                BIDXIDRES_SETID(lp_ret_res, BIDXIDRES_CNT(lp_ret_res), id);
-                BIDXIDRES_CNT(lp_ret_res)++;
-                
-                if(BIDXIDRES_CNT(lp_ret_res) == cnt)break;
+                if(n_res_idx < cnt)
+                {
+                    BIDXIDRES_SETID(lp_ret_res, n_res_idx, id);
+                    n_res_idx++;
+                }
             }
             n_hit_cnt++;
         }
         
         idx++;
     }
+    BIDXIDRES_CNT(lp_ret_res) = n_res_idx;
+    *pTotal = n_hit_cnt;
     return lp_ret_res;
 }

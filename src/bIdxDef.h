@@ -17,7 +17,8 @@ typedef int  bid_t;
 
 #define BIDX_JSONKEY_op            "op"
 #define BIDX_JSONKEY_org           "org"
-#define BIDX_JSONKEY_eggTbl        "eggTbl"
+#define BIDX_JSONKEY_eggtbl        "eggtbl"
+#define BIDX_JSONKEY_eggdb        "eggdb"
 #define BIDX_JSONKEY_fieldId       "fieldId"
 #define BIDX_JSONKEY_tagId         "tagId"
 #define BIDX_JSONKEY_needDoc       "needDoc"
@@ -66,9 +67,10 @@ typedef int  bid_t;
 #define BIDX_JSONVAL_STAR          "STAR"
 #define BIDX_JSONVAL_IMP           "IMP"
 
-#define BIDX_EQL_SELECT           "SET OUTFORMAT json;\nselect weight"
-#define BIDX_EQL_SELECT_LEN           (20+13)
-
+#define BIDX_EQL_SELECT           "select weight"
+#define BIDX_EQL_SELECT_LEN           (13)
+#define BIDX_EQL_FROM           "from"
+#define BIDX_EQL_FORMAT           "SET OUTFORMAT json;"
 
 #define ALLSTR_SIGN "." 
 #define dup_all_string(pre, suf, all)                   \

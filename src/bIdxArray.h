@@ -46,7 +46,7 @@ typedef struct st_bIdxIdRes
 
 #define BIDXIDRES_INIT(pRes, c) do{pRes = (bIdxBasRes*)malloc(sizeof(bIdxBasRes)); (pRes)->cnt = c; (pRes)->ids = (bid_t*)malloc(sizeof(bid_t) * (c)); }while(0)
 
-#define BIDXIDRES_DESTORY(pRes) do{free(pRes->ids); free(pRes); }while(0)
+#define BIDXIDRES_DESTORY(pRes) do{if(pRes){free(pRes->ids); free(pRes);} }while(0)
 
 
 #define BIDXIDRES_SETID(pRes, i, id) do{if(i < (pRes)->cnt) (pRes)->ids[i] = id;}while(FALSE);
@@ -96,11 +96,12 @@ bIdxArray* bIdxArray_dup(bIdxArray* pArray);
 
 bIdxBlock* bIdxBlock_init(char* org, char* tag, unsigned short startIdx, bbyte bitVal, bbyte* memblock);
 
-bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt);
+bIdxBasRes* bIdxArray_get_idResult(bIdxArray* arr, size_t off, size_t cnt, size_t *pTotal);
 
 bIdxArray* bIdxIdRes_get_idxArray(bIdxBasRes* res, size_t off, size_t cnt);
 
 //2个结构做and操作，生成一个idres，id按照老的idres里的id排序
-bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt);
+
+bIdxBasRes* bIdx_resAndArray(bIdxBasRes* res, bIdxArray* arr, size_t off, size_t cnt, size_t* pTotal);
 
 #endif
