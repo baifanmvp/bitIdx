@@ -20,9 +20,9 @@ char * sock_tran(char* js, char* ip, unsigned short port)
 
     struct sockaddr_in c_addr = {0};
     c_addr.sin_family = AF_INET;
-    c_addr.sin_port = htons(14000);
+    c_addr.sin_port = htons(port);
     
-    if( !inet_aton("127.0.0.1",&c_addr.sin_addr))
+    if( !inet_aton(ip,&c_addr.sin_addr))
            perror("bad address");
     int ret = connect(sd, &c_addr, sizeof(c_addr) );
 

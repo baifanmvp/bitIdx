@@ -223,9 +223,9 @@ void* bIdxServer_processing_sk (void* arg)
     int n_recv_sz = 0;
     bIdxServer_recv(fd, &n_recv_sz, sizeof(n_recv_sz), 0);
     n_recv_sz = ntohl(n_recv_sz);
-    char* lp_recv_buf = (char* ) malloc(n_recv_sz);
+    char* lp_recv_buf = (char* ) malloc(n_recv_sz + 1);
     bIdxServer_recv(fd, lp_recv_buf, n_recv_sz, 0);
-
+    lp_recv_buf[n_recv_sz] = '\0';
     //   char* lp_res = bIdxer_query(pIdxer, "{\"op\":\"ADDTAG\", \"org\" : \"xian\", \"fieldId\" : \"LABEL\", \"tagId\" : [\"bf1\", \"bf2\",\"bf3\", \"bf4\", \"bf5\"] }");
 
     char* lp_res = bIdxer_query(pIdxer, lp_recv_buf);    
@@ -446,7 +446,7 @@ int bIdxServer_request (bIdxServer* pServer, char* eqlIp, unsigned short eqlPort
 int main (int argc, char* argv[])
     
 {
-    if(argc != 3 || argc != 5)
+    if(argc != 3 && argc != 5)
     {
         printf("arg is error !\n");
         exit(-1);
@@ -460,7 +460,7 @@ int main (int argc, char* argv[])
     }
     else
     {
-        bIdxServer_request (lp_idx_server, argv[3], aoti(argv[4]));
+        bIdxServer_request (lp_idx_server, argv[3], atoi(argv[4]));
     }
     return 0;
 }

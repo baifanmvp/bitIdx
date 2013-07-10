@@ -473,6 +473,12 @@ bbool bIdxBasOp_add_array(bIdxBasOp* pbIdxBasOp, char* prefix, char* suffix)
     {
         bIdxArray* lp_new_array = bIdxArray_new();
         bIdxHash_insert(pbIdxBasOp->haIdx, prefix, suffix, lp_new_array);
+        
+        bIdxBlock* p_new_block =  bIdxBasOp_get_free_idxBlock(pbIdxBasOp);
+        bIdxBlock_init(prefix, suffix, 0, 0, (bbyte*)p_new_block);
+   
+        bIdxArray_load_block(lp_new_array, p_new_block, 0);
+
         return TRUE;
     }
     else

@@ -168,10 +168,9 @@ bIdxArray*  bIdxHash_remove(bIdxHash* pIdxHash, char* prefix, char* suffix )
     bIdxArray* lp_array = NULL;
     
     bAllVal* lp_all_val = bIdxHash_lookup_all(pIdxHash, lp_all_key);
-    free(lp_all_key);
     if(lp_all_val)
     {
-        g_hash_table_remove(pIdxHash->allHash, lp_all_key);
+       gboolean ret = g_hash_table_remove(pIdxHash->allHash, lp_all_key);
         lp_array = lp_all_val->data;
         free(lp_all_val);
     }
@@ -212,12 +211,14 @@ bIdxArray*  bIdxHash_remove(bIdxHash* pIdxHash, char* prefix, char* suffix )
         }
         else
         {
-            g_hash_table_remove(pIdxHash->preHash, prefix);
+           gboolean ret = g_hash_table_remove(pIdxHash->preHash, prefix);
             free(lp_pre_val->prefix);            
         }
         
         free(lp_pre_val->suffix);
         free(lp_pre_val);
     }
+    free(lp_all_key);
+
     return lp_array;
 }
